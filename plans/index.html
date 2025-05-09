@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>eSIM Country Coverage</title>
+  <title>Roampass Regions</title>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 text-gray-800 p-6">
-
   <div class="max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6 text-center">eSIM Covered Countries</h1>
+    <h1 class="text-3xl font-bold mb-6 text-center">Available Regions (From Row 14)</h1>
     <div id="output" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
   </div>
 
@@ -23,18 +22,19 @@
         const data = new Uint8Array(buffer);
         const workbook = XLSX.read(data, { type: 'array' });
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const json = XLSX.utils.sheet_to_json(sheet);
+        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // raw row array
 
         const container = document.getElementById('output');
-        const countrySet = new Set();
+        const regionIndex = rows[13].indexOf('Region Name'); // header row = index 13
+        const usedRegions = new Set();
 
-        json.forEach(row => {
-          const country = row.Country?.trim();
-          if (country && !countrySet.has(country)) {
-            countrySet.add(country);
+        rows.slice(14).forEach(row => {
+          const region = row[regionIndex];
+          if (region && !usedRegions.has(region)) {
+            usedRegions.add(region);
             const card = document.createElement('div');
             card.className = 'bg-white p-4 rounded-xl shadow text-center';
-            card.innerHTML = `<h4 class="text-lg font-semibold">${country}</h4>`;
+            card.innerHTML = `<h4 class="text-lg font-semibold">${region}</h4>`;
             container.appendChild(card);
           }
         });
