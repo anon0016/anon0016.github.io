@@ -1,44 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Roampass Regions</title>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Country Coverage – Roampass</title>
+  <!-- Tailwind CDN  (quick demo; replace with local build in production) -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 p-6">
-  <div class="max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6 text-center">Available Regions (From Row 14)</h1>
-    <div id="output" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+<body class="min-h-screen bg-gray-50 text-gray-800 p-4">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center">eSIM Coverage Countries</h1>
+
+    <!-- Country grid -->
+    <div id="countryGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
   </div>
 
   <script>
-    const url = "https://pub-6c2916641e234c18a33f84fd64d78e70.r2.dev/Maya%20Mobile%20-%20Product%20Distributor%20Pricing%202025%20-%20CONFIDENTIAL%20(1).xlsx";
+    /**
+     * Change this URL if your JSON is hosted elsewhere.
+     * Expecting structure:
+     * [
+     *   { "country":"Japan", "plans":[{"days":7,"data":"1GB","price":4.99}, ...] },
+     *   ...
+     * ]
+     */
+    const DATA_URL = "plans.json";
 
-    fetch(url)
-      .then(res => res.arrayBuffer())
-      .then(buffer => {
-        const data = new Uint8Array(buffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // raw row array
+    async function loadCountries() {
+      try {
+        const res = await fetch(DATA_URL);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const plans = await res.json();
 
-        const container = document.getElementById('output');
-        const regionIndex = rows[13].indexOf('Region Name'); // header row = index 13
-        const usedRegions = new Set();
+        // Extract countries & minimum price
+        const countries = plans.map(entry => {
+          const minPrice = Math.min(...entry.plans.map(p => p.price));
+          return { name: entry.country, price: minPrice };
+        }).sort((a, b) => a.name.localeCompare(b.name));
 
-        rows.slice(14).forEach(row => {
-          const region = row[regionIndex];
-          if (region && !usedRegions.has(region)) {
-            usedRegions.add(region);
-            const card = document.createElement('div');
-            card.className = 'bg-white p-4 rounded-xl shadow text-center';
-            card.innerHTML = `<h4 class="text-lg font-semibold">${region}</h4>`;
-            container.appendChild(card);
-          }
-        });
+        renderCountries(countries);
+      } catch (err) {
+        console.error("Failed to load plans.json", err);
+        document.getElementById("countryGrid").innerHTML =
+          `<p class='text-red-600 col-span-full text-center'>Failed to load data 😢</p>`;
+      }
+    }
+
+    function renderCountries(list) {
+      const grid = document.getElementById("countryGrid");
+      grid.innerHTML = "";
+      list.forEach(({ name, price }) => {
+        const card = document.createElement("a");
+        card.href = `./countries/${encodeURIComponent(name.toLowerCase())}.html`;
+        card.className = "bg-white shadow rounded-xl p-4 flex flex-col items-center hover:ring-2 hover:ring-blue-400 transition";
+        card.innerHTML = `
+          <span class='text-2xl mb-2'>🌐</span>
+          <h2 class='font-semibold mb-1 text-center'>${name}</h2>
+          <p class='text-sm text-gray-600'>from $${price.toFixed(2)}</p>
+        `;
+        grid.appendChild(card);
       });
+    }
+
+    loadCountries();
   </script>
 </body>
 </html>
