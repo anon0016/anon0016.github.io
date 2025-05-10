@@ -1,146 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Roampass · Plan JSON Builder</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roampass • Coverage Countries</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-800 p-6 min-h-screen">
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow">
-    <h1 class="text-2xl font-bold mb-6 text-center">eSIM Plan JSON Builder</h1>
-
-    <!-- Input Fields -->
-    <div class="grid sm:grid-cols-2 gap-4 mb-4">
-      <input id="country" type="text" placeholder="Country (e.g. Japan)" class="border p-2 rounded" />
-      <input id="days" type="number" placeholder="Days (e.g. 15)" class="border p-2 rounded" />
-      <input id="data" type="text" placeholder="Data (e.g. 3GB)" class="border p-2 rounded" />
-      <input id="price" type="number" step="0.01" placeholder="Price (e.g. 9.99)" class="border p-2 rounded" />
-    </div>
-
-    <div class="mb-6 space-x-2">
-      <button id="addBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Plan</button>
-      <button onclick="downloadJSON()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Export JSON</button>
-      <button onclick="clearAll()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Clear All</button>
-    </div>
-
-    <!-- Data View -->
-    <h2 class="text-xl font-semibold mb-2">Plan List</h2>
-    <div id="planList" class="space-y-4"></div>
-  </div>
+<body class="bg-gray-50 text-gray-800 p-6 min-h-screen">
+  <main class="max-w-6xl mx-auto">
+    <h1 class="text-3xl font-bold text-center mb-8">eSIM Coverage</h1>
+    <div id="countryGrid" class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
+  </main>
 
   <script>
-    const countryInput = document.getElementById('country');
-    const daysInput = document.getElementById('days');
-    const dataInput = document.getElementById('data');
-    const priceInput = document.getElementById('price');
-    const planListDiv = document.getElementById('planList');
-    const addBtn = document.getElementById('addBtn');
+    // 远程 R2 链接（需正确的 CORS 头），失败则回退到本地 plans.json
+    const REMOTE_URL = "https://price.roampass.uk/plans.json";
 
-    let plansByCountry = [];
-    let editState = null; // {countryIndex, planIndex}
+    loadPlans(REMOTE_URL)
+      .catch(() => loadPlans(LOCAL_URL))
+      .catch(() => showError("Unable to load coverage data."));
 
-    addBtn.addEventListener('click', () => {
-      const country = countryInput.value.trim();
-      const days = parseInt(daysInput.value);
-      const data = dataInput.value.trim();
-      const price = parseFloat(priceInput.value);
-
-      if (!country || !days || !data || isNaN(price)) {
-        alert('Please fill all fields correctly.');
-        return;
-      }
-
-      if (editState) {
-        const { countryIndex, planIndex } = editState;
-        plansByCountry[countryIndex].plans[planIndex] = { days, data, price };
-        editState = null;
-        addBtn.textContent = 'Add Plan';
-      } else {
-        let countryEntry = plansByCountry.find(c => c.country === country);
-        if (!countryEntry) {
-          countryEntry = { country, plans: [] };
-          plansByCountry.push(countryEntry);
-        }
-        countryEntry.plans.push({ days, data, price });
-      }
-
-      clearInputs();
-      renderList();
-    });
-
-    function clearInputs() {
-      countryInput.value = '';
-      daysInput.value = '';
-      dataInput.value = '';
-      priceInput.value = '';
+    async function loadPlans(url) {
+      const res = await fetch(url, { credentials: "omit" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      renderCountries(Array.isArray(data) ? data : []);
     }
 
-    function renderList() {
-      planListDiv.innerHTML = '';
-      plansByCountry.forEach((entry, cIdx) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'border rounded p-4 bg-gray-50';
-        const title = document.createElement('h3');
-        title.className = 'font-semibold mb-2';
-        title.textContent = entry.country;
-        wrapper.appendChild(title);
+    function renderCountries(data) {
+      const grid = document.getElementById("countryGrid");
+      grid.innerHTML = "";
+      if (!data.length) return showError("No country data found.");
 
-        entry.plans.forEach((plan, pIdx) => {
-          const row = document.createElement('div');
-          row.className = 'flex justify-between items-center bg-white p-2 mb-1 rounded shadow';
-          row.innerHTML = `<span>${plan.days}d • ${plan.data} • $${plan.price.toFixed(2)}</span>`;
-
-          const btnGroup = document.createElement('div');
-          btnGroup.className = 'space-x-2';
-          const editBtn = document.createElement('button');
-          editBtn.textContent = 'Edit';
-          editBtn.className = 'text-sm px-2 py-1 bg-blue-500 text-white rounded';
-          const delBtn = document.createElement('button');
-          delBtn.textContent = 'Delete';
-          delBtn.className = 'text-sm px-2 py-1 bg-red-500 text-white rounded';
-
-          editBtn.onclick = () => startEdit(cIdx, pIdx);
-          delBtn.onclick = () => deletePlan(cIdx, pIdx);
-
-          btnGroup.appendChild(editBtn);
-          btnGroup.appendChild(delBtn);
-          row.appendChild(btnGroup);
-          wrapper.appendChild(row);
-        });
-
-        planListDiv.appendChild(wrapper);
+      // 用 Map 取各国最低价
+      const minPrice = new Map();
+      data.forEach(({ country, plans }) => {
+        if (!country || !Array.isArray(plans)) return;
+        const cheapest = plans.reduce((m, p) => Math.min(m, +p.price || Infinity), Infinity);
+        if (isFinite(cheapest)) minPrice.set(country, cheapest);
       });
+
+      [...minPrice.entries()]
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .forEach(([country, price]) => {
+          const card = document.createElement("a");
+          card.href = `./${encodeURIComponent(country.toLowerCase().replace(/\s+/g, "-"))}.html`;
+          card.className =
+            "bg-white rounded-xl shadow p-4 flex flex-col justify-between hover:shadow-lg transition";
+          card.innerHTML = `
+            <div class="text-lg font-semibold mb-2">${country}</div>
+            <div class="text-sm text-gray-600">from <span class="font-bold text-blue-600">$${price.toFixed(2)}</span></div>
+          `;
+          grid.appendChild(card);
+        });
     }
 
-    function startEdit(cIdx, pIdx) {
-      const plan = plansByCountry[cIdx].plans[pIdx];
-      countryInput.value = plansByCountry[cIdx].country;
-      daysInput.value = plan.days;
-      dataInput.value = plan.data;
-      priceInput.value = plan.price;
-      editState = { countryIndex: cIdx, planIndex: pIdx };
-      addBtn.textContent = 'Update Plan';
-    }
-
-    function deletePlan(cIdx, pIdx) {
-      plansByCountry[cIdx].plans.splice(pIdx, 1);
-      if (plansByCountry[cIdx].plans.length === 0) {
-        plansByCountry.splice(cIdx, 1);
-      }
-      renderList();
-    }
-
-    function clearAll() {
-      if (confirm('Clear all plans?')) {
-        plansByCountry = [];
-        renderList();
-      }
-    }
-
-    function downloadJSON() {
-      const blob = new Blob([JSON.stringify(plansByCountry, null, 2)], { type: 'application/json' });
-      const url = "https://pub-6c2916641e234c18a33f84fd64d78e70.r2.dev/plans.json";
+    function showError(msg) {
+      document.getElementById("countryGrid").innerHTML = `<p class='text-red-600'>${msg}</p>`;
     }
   </script>
 </body>
