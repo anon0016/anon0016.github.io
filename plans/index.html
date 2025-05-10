@@ -3,59 +3,145 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Country Coverage – Roampass</title>
-  <!-- Tailwind CDN  (quick demo; replace with local build in production) -->
+  <title>Roampass · Plan JSON Builder</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-gray-50 text-gray-800 p-4">
-  <div class="max-w-6xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6 text-center">eSIM Coverage Countries</h1>
+<body class="bg-gray-100 text-gray-800 p-6 min-h-screen">
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow">
+    <h1 class="text-2xl font-bold mb-6 text-center">eSIM Plan JSON Builder</h1>
 
-    <!-- Country grid -->
-    <div id="countryGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+    <!-- Input Fields -->
+    <div class="grid sm:grid-cols-2 gap-4 mb-4">
+      <input id="country" type="text" placeholder="Country (e.g. Japan)" class="border p-2 rounded" />
+      <input id="days" type="number" placeholder="Days (e.g. 15)" class="border p-2 rounded" />
+      <input id="data" type="text" placeholder="Data (e.g. 3GB)" class="border p-2 rounded" />
+      <input id="price" type="number" step="0.01" placeholder="Price (e.g. 9.99)" class="border p-2 rounded" />
+    </div>
+
+    <div class="mb-6 space-x-2">
+      <button id="addBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Plan</button>
+      <button onclick="downloadJSON()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Export JSON</button>
+      <button onclick="clearAll()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Clear All</button>
+    </div>
+
+    <!-- Data View -->
+    <h2 class="text-xl font-semibold mb-2">Plan List</h2>
+    <div id="planList" class="space-y-4"></div>
   </div>
 
   <script>
+    const countryInput = document.getElementById('country');
+    const daysInput = document.getElementById('days');
+    const dataInput = document.getElementById('data');
+    const priceInput = document.getElementById('price');
+    const planListDiv = document.getElementById('planList');
+    const addBtn = document.getElementById('addBtn');
 
-    const DATA_URL = "https://pub-6c2916641e234c18a33f84fd64d78e70.r2.dev/plans.json";
+    let plansByCountry = [];
+    let editState = null; // {countryIndex, planIndex}
 
-    async function loadCountries() {
-      try {
-        const res = await fetch(DATA_URL);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const plans = await res.json();
+    addBtn.addEventListener('click', () => {
+      const country = countryInput.value.trim();
+      const days = parseInt(daysInput.value);
+      const data = dataInput.value.trim();
+      const price = parseFloat(priceInput.value);
 
-        // Extract countries & minimum price
-        const countries = plans.map(entry => {
-          const minPrice = Math.min(...entry.plans.map(p => p.price));
-          return { name: entry.country, price: minPrice };
-        }).sort((a, b) => a.name.localeCompare(b.name));
-
-        renderCountries(countries);
-      } catch (err) {
-        console.error("Failed to load plans.json", err);
-        document.getElementById("countryGrid").innerHTML =
-          `<p class='text-red-600 col-span-full text-center'>Failed to load data 😢</p>`;
+      if (!country || !days || !data || isNaN(price)) {
+        alert('Please fill all fields correctly.');
+        return;
       }
+
+      if (editState) {
+        const { countryIndex, planIndex } = editState;
+        plansByCountry[countryIndex].plans[planIndex] = { days, data, price };
+        editState = null;
+        addBtn.textContent = 'Add Plan';
+      } else {
+        let countryEntry = plansByCountry.find(c => c.country === country);
+        if (!countryEntry) {
+          countryEntry = { country, plans: [] };
+          plansByCountry.push(countryEntry);
+        }
+        countryEntry.plans.push({ days, data, price });
+      }
+
+      clearInputs();
+      renderList();
+    });
+
+    function clearInputs() {
+      countryInput.value = '';
+      daysInput.value = '';
+      dataInput.value = '';
+      priceInput.value = '';
     }
 
-    function renderCountries(list) {
-      const grid = document.getElementById("countryGrid");
-      grid.innerHTML = "";
-      list.forEach(({ name, price }) => {
-        const card = document.createElement("a");
-        card.href = `./countries/${encodeURIComponent(name.toLowerCase())}.html`;
-        card.className = "bg-white shadow rounded-xl p-4 flex flex-col items-center hover:ring-2 hover:ring-blue-400 transition";
-        card.innerHTML = `
-          <span class='text-2xl mb-2'>🌐</span>
-          <h2 class='font-semibold mb-1 text-center'>${name}</h2>
-          <p class='text-sm text-gray-600'>from $${price.toFixed(2)}</p>
-        `;
-        grid.appendChild(card);
+    function renderList() {
+      planListDiv.innerHTML = '';
+      plansByCountry.forEach((entry, cIdx) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'border rounded p-4 bg-gray-50';
+        const title = document.createElement('h3');
+        title.className = 'font-semibold mb-2';
+        title.textContent = entry.country;
+        wrapper.appendChild(title);
+
+        entry.plans.forEach((plan, pIdx) => {
+          const row = document.createElement('div');
+          row.className = 'flex justify-between items-center bg-white p-2 mb-1 rounded shadow';
+          row.innerHTML = `<span>${plan.days}d • ${plan.data} • $${plan.price.toFixed(2)}</span>`;
+
+          const btnGroup = document.createElement('div');
+          btnGroup.className = 'space-x-2';
+          const editBtn = document.createElement('button');
+          editBtn.textContent = 'Edit';
+          editBtn.className = 'text-sm px-2 py-1 bg-blue-500 text-white rounded';
+          const delBtn = document.createElement('button');
+          delBtn.textContent = 'Delete';
+          delBtn.className = 'text-sm px-2 py-1 bg-red-500 text-white rounded';
+
+          editBtn.onclick = () => startEdit(cIdx, pIdx);
+          delBtn.onclick = () => deletePlan(cIdx, pIdx);
+
+          btnGroup.appendChild(editBtn);
+          btnGroup.appendChild(delBtn);
+          row.appendChild(btnGroup);
+          wrapper.appendChild(row);
+        });
+
+        planListDiv.appendChild(wrapper);
       });
     }
 
-    loadCountries();
+    function startEdit(cIdx, pIdx) {
+      const plan = plansByCountry[cIdx].plans[pIdx];
+      countryInput.value = plansByCountry[cIdx].country;
+      daysInput.value = plan.days;
+      dataInput.value = plan.data;
+      priceInput.value = plan.price;
+      editState = { countryIndex: cIdx, planIndex: pIdx };
+      addBtn.textContent = 'Update Plan';
+    }
+
+    function deletePlan(cIdx, pIdx) {
+      plansByCountry[cIdx].plans.splice(pIdx, 1);
+      if (plansByCountry[cIdx].plans.length === 0) {
+        plansByCountry.splice(cIdx, 1);
+      }
+      renderList();
+    }
+
+    function clearAll() {
+      if (confirm('Clear all plans?')) {
+        plansByCountry = [];
+        renderList();
+      }
+    }
+
+    function downloadJSON() {
+      const blob = new Blob([JSON.stringify(plansByCountry, null, 2)], { type: 'application/json' });
+      const url = "https://pub-6c2916641e234c18a33f84fd64d78e70.r2.dev/plans.json";
+    }
   </script>
 </body>
 </html>
