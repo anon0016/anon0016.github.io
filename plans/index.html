@@ -2,61 +2,270 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Roampass • Coverage Countries</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 text-gray-800 p-6 min-h-screen">
-  <main class="max-w-6xl mx-auto">
-    <h1 class="text-3xl font-bold text-center mb-8">eSIM Coverage</h1>
-    <div id="countryGrid" class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
-  </main>
-
-  <script>
-    // 远程 R2 链接（需正确的 CORS 头），失败则回退到本地 plans.json
-    const REMOTE_URL = "https://price.roampass.uk/plans.json";
-
-    loadPlans(REMOTE_URL)
-      .catch(() => loadPlans(LOCAL_URL))
-      .catch(() => showError("Unable to load coverage data."));
-
-    async function loadPlans(url) {
-      const res = await fetch(url, { credentials: "omit" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      renderCountries(Array.isArray(data) ? data : []);
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Roampass eSIM · Global Plans</title>
+  <link rel="icon" href="https://em-content.zobj.net/source/apple/391/globe-showing-europe-africa_1f30d.png" />
+  <style>
+    :root {
+      --main-bg: #f6f6f7;
+      --card-bg: #fff;
+      --brand: #0071e3;
+      --radius-xl: 2.2rem;
+      --radius: 1.1rem;
+      --shadow: 0 8px 32px 0 rgba(0,0,0,0.08);
+      --text: #222;
+      --sub: #666;
+      --btn: #0071e3;
+      --btn-hover: #005bb5;
     }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "San Francisco", "Segoe UI", Arial, sans-serif;
+      background: var(--main-bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 3rem 0 1rem 0;
+      gap: 2.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .sidebar {
+      min-width: 250px;
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 2rem 1.2rem 2rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      align-items: stretch;
+      height: fit-content;
+    }
+    .country-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 700;
+      transition: background 0.12s, color 0.14s;
+      color: var(--text);
+      border: 2px solid transparent;
+      background: none;
+      outline: none;
+    }
+    .country-item.active, .country-item:focus, .country-item:hover {
+      background: #f0f4fa;
+      color: var(--brand);
+      border: 2px solid var(--brand);
+    }
+    .country-flag {
+      font-size: 1.7rem;
+      margin-right: 0.1em;
+      filter: drop-shadow(0 1px 1px #eee);
+    }
+    .main-panel {
+      flex: 1 1 0;
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 2.5rem 2.2rem 2rem 2.2rem;
+      min-width: 350px;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .main-panel .title {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--brand);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .main-panel .desc {
+      color: var(--sub);
+      font-size: 1.08rem;
+      margin-bottom: 1.3rem;
+    }
+    .plans-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .plan-card {
+      background: var(--main-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 10px 0 rgba(0,0,0,0.04);
+      padding: 1.3rem 1.1rem 1.2rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      border: 1.5px solid #ececec;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .plan-info {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      min-width: 180px;
+    }
+    .plan-name {
+      font-size: 1.03rem;
+      font-weight: 700;
+      color: #444;
+    }
+    .plan-days {
+      font-size: 1.08rem;
+      font-weight: 700;
+    }
+    .plan-data {
+      font-size: 1.06rem;
+      color: var(--brand);
+      font-weight: 800;
+    }
+    .plan-desc {
+      font-size: 0.98rem;
+      color: var(--sub);
+      margin-top: 0.2rem;
+    }
+    .plan-price {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--brand);
+      min-width: 54px;
+      text-align: right;
+    }
+    .buy-btn {
+      margin-left: 1.5rem;
+      background: var(--btn);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.01rem;
+      border: none;
+      border-radius: 2rem;
+      padding: 0.65rem 1.8rem;
+      cursor: pointer;
+      transition: background 0.14s;
+      box-shadow: 0 2px 8px 0 rgba(0,112,233,0.09);
+      outline: none;
+      letter-spacing: 0.01em;
+    }
+    .buy-btn:hover {
+      background: var(--btn-hover);
+    }
+    @media (max-width: 800px) {
+      .wrap {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1.2rem 0.5rem;
+        align-items: stretch;
+      }
+      .sidebar, .main-panel {
+        border-radius: 1.2rem;
+        min-width: 0;
+        padding: 1.2rem 0.8rem 1.2rem 0.8rem;
+      }
+      .main-panel {
+        padding: 1.5rem 0.8rem 1rem 0.8rem;
+      }
+    }
+    @media (max-width: 600px) {
+      .plan-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+      }
+      .buy-btn {
+        width: 100%;
+        text-align: center;
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div style="display:flex;align-items:center;gap:0.7rem;justify-content:center;margin-top:1.5rem;margin-bottom:-2.5rem;">
+    <img src="https://em-content.zobj.net/source/apple/391/globe-showing-europe-africa_1f30d.png" alt="eSIM" style="width:2.4rem;height:2.4rem;border-radius:1rem;">
+    <span style="font-size:2rem;font-weight:900;color:#0071e3;letter-spacing:0.03em;">Roampass</span>
+  </div>
+  <div class="wrap">
+    <div class="sidebar" id="countryList">
+      <span style="color:#777;font-size:1.08rem;font-weight:600;margin-bottom:0.6rem;">Select Country/Region</span>
+    </div>
+    <div class="main-panel" id="mainPanel">
+      <div style="color:#aaa;text-align:center;">Please select a country/region<br>on the left to view available plans</div>
+    </div>
+  </div>
+  <footer style="text-align:center;color:#888;font-size:0.96rem;margin:1.8rem 0 0.5rem 0;">
+    WeChat: <span style="color:#0071e3;font-weight:600;">esimroampass</span>
+    &nbsp;|&nbsp; Email: <span style="color:#0071e3;font-weight:600;">hi@roampass.com</span><br>
+    &copy; 2025 Roampass
+  </footer>
+  <script>
+    let data = [];
+    let selectedIdx = -1;
 
-    function renderCountries(data) {
-      const grid = document.getElementById("countryGrid");
-      grid.innerHTML = "";
-      if (!data.length) return showError("No country data found.");
-
-      // 用 Map 取各国最低价
-      const minPrice = new Map();
-      data.forEach(({ country, plans }) => {
-        if (!country || !Array.isArray(plans)) return;
-        const cheapest = plans.reduce((m, p) => Math.min(m, +p.price || Infinity), Infinity);
-        if (isFinite(cheapest)) minPrice.set(country, cheapest);
+    fetch('./roampass_esim_plans.json')
+      .then(r => r.json())
+      .then(res => {
+        data = res;
+        renderCountryList();
+        if (data.length > 0) selectCountry(0);
       });
 
-      [...minPrice.entries()]
-        .sort((a, b) => a[0].localeCompare(b[0]))
-        .forEach(([country, price]) => {
-          const card = document.createElement("a");
-          card.href = `./${encodeURIComponent(country.toLowerCase().replace(/\s+/g, "-"))}.html`;
-          card.className =
-            "bg-white rounded-xl shadow p-4 flex flex-col justify-between hover:shadow-lg transition";
-          card.innerHTML = `
-            <div class="text-lg font-semibold mb-2">${country}</div>
-            <div class="text-sm text-gray-600">from <span class="font-bold text-blue-600">$${price.toFixed(2)}</span></div>
-          `;
-          grid.appendChild(card);
-        });
+    function renderCountryList() {
+      const list = document.getElementById('countryList');
+      list.innerHTML = `<span style="color:#777;font-size:1.08rem;font-weight:600;margin-bottom:0.6rem;">Select Country/Region</span>`;
+      data.forEach((item, idx) => {
+        const el = document.createElement('button');
+        el.className = 'country-item' + (idx === selectedIdx ? ' active' : '');
+        el.innerHTML = `<span class="country-flag">${item.flag || ''}</span> ${item.country}`;
+        el.onclick = () => selectCountry(idx);
+        list.appendChild(el);
+      });
     }
-
-    function showError(msg) {
-      document.getElementById("countryGrid").innerHTML = `<p class='text-red-600'>${msg}</p>`;
+    function selectCountry(idx) {
+      selectedIdx = idx;
+      renderCountryList();
+      const panel = document.getElementById('mainPanel');
+      const country = data[idx];
+      panel.innerHTML = `
+        <div class="title"><span class="country-flag">${country.flag || ''}</span>${country.country}</div>
+        <div class="desc">Available Plans (buy as many as you like)</div>
+        <div class="plans-list">
+          ${
+            country.plans && country.plans.length > 0 ?
+            country.plans.map(plan => `
+              <div class="plan-card">
+                <div class="plan-info">
+                  <span class="plan-name">${plan.name || ''}</span>
+                  <span class="plan-days">${plan.days} days</span>
+                  <span class="plan-data">${plan.data}</span>
+                  <span class="plan-desc">${plan.desc || ''}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:1.2rem;">
+                  <span class="plan-price">€${plan.price}</span>
+                  <button class="buy-btn" onclick="window.open('${plan.link || '#'}','_blank')">Buy</button>
+                </div>
+              </div>
+            `).join('')
+            : `<div style="color:#aaa;">No plans available</div>`
+          }
+        </div>
+      `;
     }
   </script>
 </body>
