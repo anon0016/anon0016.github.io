@@ -212,31 +212,31 @@
   <script>
     let data = [];
     let selectedIdx = -1;
-    // 加载并自动聚合你的扁平 json 数据
+
     fetch('./roampass_esim_plans.json')
       .then(r => r.json())
       .then(flatList => {
-        // 1. 去掉多余空格
+        // 1. 自动清理所有国家名的前后空白、NBSP
         flatList.forEach(item => {
-          if (item['Region']) item['Region'] = item['Region'].trim();
+          if (item['Region']) item['Region'] = String(item['Region']).replace(/^[\s\u00A0]+|[\s\u00A0]+$/g, '');
         });
-        // 2. 聚合
+        // 2. 自动聚合为国家=>套餐
         const countryMap = {};
         flatList.forEach(item => {
-          const country = item['Region'];
+          const country = item['Region'] || 'Unknown';
           if (!countryMap[country]) {
             countryMap[country] = [];
           }
           countryMap[country].push(item);
         });
-        // 3. 转换为页面要求的结构
+        // 3. 转为页面数据结构
         data = Object.keys(countryMap).map(country => ({
           country,
           flag: getFlagEmoji(country),
           plans: countryMap[country].map(plan => ({
-            days: plan["Validity (Days)"],
-            data: (typeof plan["Data (GB)"] === "number" ? plan["Data (GB)"] + "GB" : plan["Data (GB)"]),
-            price: plan["RRP info"],
+            days: plan["Validity (Days)"] || "",
+            data: (typeof plan["Data (GB)"] === "number" ? plan["Data (GB)"] + "GB" : (plan["Data (GB)"] || "")),
+            price: plan["RRP info"] || "",
             desc: plan["Traffic Policy"] || "",
             name: plan["Name"] || ""
           }))
@@ -250,23 +250,14 @@
       });
 
     function getFlagEmoji(country) {
-      // 你可以自己补充所有国家
+      // 你可以扩展所有国家
       const flags = {
-        "Afghanistan": "🇦🇫",
-        "Albania": "🇦🇱",
-        "Algeria": "🇩🇿",
-        "Andorra": "🇦🇩",
-        "Anguilla": "🇦🇮",
-        "Antigua and Barbuda": "🇦🇬",
-        "Argentina": "🇦🇷",
-        "Armenia": "🇦🇲",
-        "Aruba": "🇦🇼",
-        "Australia": "🇦🇺",
-        "Austria": "🇦🇹",
-        "Azerbaijan": "🇦🇿"
-        // ...你需要的都可以自己补充
+        Afghanistan: "🇦🇫", Albania: "🇦🇱", Algeria: "🇩🇿", Andorra: "🇦🇩", Anguilla: "🇦🇮",
+        "Antigua and Barbuda": "🇦🇬", Argentina: "🇦🇷", Armenia: "🇦🇲", Aruba: "🇦🇼", Australia: "🇦🇺",
+        Austria: "🇦🇹", Azerbaijan: "🇦🇿", "United Kingdom": "🇬🇧", France: "🇫🇷", Spain: "🇪🇸",
+        "Hong Kong": "🇭🇰", China: "🇨🇳"
+        // ...
       };
-      // 去掉所有前后空格
       let key = (country || '').trim();
       return flags[key] || "🌐";
     }
