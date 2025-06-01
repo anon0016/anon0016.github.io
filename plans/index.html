@@ -122,11 +122,6 @@
       gap: 0.2rem;
       min-width: 180px;
     }
-    .plan-name {
-      font-size: 1.03rem;
-      font-weight: 700;
-      color: #444;
-    }
     .plan-days {
       font-size: 1.08rem;
       font-weight: 700;
@@ -217,14 +212,64 @@
   <script>
     let data = [];
     let selectedIdx = -1;
-
+    // 加载并自动聚合你的扁平 json 数据
     fetch('./roampass_esim_plans.json')
       .then(r => r.json())
-      .then(res => {
-        data = res;
+      .then(flatList => {
+        // 1. 去掉多余空格
+        flatList.forEach(item => {
+          if (item['Region']) item['Region'] = item['Region'].trim();
+        });
+        // 2. 聚合
+        const countryMap = {};
+        flatList.forEach(item => {
+          const country = item['Region'];
+          if (!countryMap[country]) {
+            countryMap[country] = [];
+          }
+          countryMap[country].push(item);
+        });
+        // 3. 转换为页面要求的结构
+        data = Object.keys(countryMap).map(country => ({
+          country,
+          flag: getFlagEmoji(country),
+          plans: countryMap[country].map(plan => ({
+            days: plan["Validity (Days)"],
+            data: (typeof plan["Data (GB)"] === "number" ? plan["Data (GB)"] + "GB" : plan["Data (GB)"]),
+            price: plan["RRP info"],
+            desc: plan["Traffic Policy"] || "",
+            name: plan["Name"] || ""
+          }))
+        }));
         renderCountryList();
         if (data.length > 0) selectCountry(0);
+      })
+      .catch(e => {
+        document.getElementById('mainPanel').innerHTML =
+          `<div style="color:red;text-align:center;font-size:1.2rem;">Failed to load data: ${e.message}</div>`;
       });
+
+    function getFlagEmoji(country) {
+      // 你可以自己补充所有国家
+      const flags = {
+        "Afghanistan": "🇦🇫",
+        "Albania": "🇦🇱",
+        "Algeria": "🇩🇿",
+        "Andorra": "🇦🇩",
+        "Anguilla": "🇦🇮",
+        "Antigua and Barbuda": "🇦🇬",
+        "Argentina": "🇦🇷",
+        "Armenia": "🇦🇲",
+        "Aruba": "🇦🇼",
+        "Australia": "🇦🇺",
+        "Austria": "🇦🇹",
+        "Azerbaijan": "🇦🇿"
+        // ...你需要的都可以自己补充
+      };
+      // 去掉所有前后空格
+      let key = (country || '').trim();
+      return flags[key] || "🌐";
+    }
 
     function renderCountryList() {
       const list = document.getElementById('countryList');
@@ -251,14 +296,13 @@
             country.plans.map(plan => `
               <div class="plan-card">
                 <div class="plan-info">
-                  <span class="plan-name">${plan.name || ''}</span>
                   <span class="plan-days">${plan.days} days</span>
                   <span class="plan-data">${plan.data}</span>
                   <span class="plan-desc">${plan.desc || ''}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:1.2rem;">
                   <span class="plan-price">€${plan.price}</span>
-                  <button class="buy-btn" onclick="window.open('${plan.link || '#'}','_blank')">Buy</button>
+                  <button class="buy-btn" disabled>Buy</button>
                 </div>
               </div>
             `).join('')
