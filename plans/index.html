@@ -1,307 +1,119 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Roampass eSIM · Global Plans</title>
-  <link rel="icon" href="https://em-content.zobj.net/source/apple/391/globe-showing-europe-africa_1f30d.png" />
+  <title>你要去哪儿？🌍</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      --main-bg: #f6f6f7;
-      --card-bg: #fff;
-      --brand: #0071e3;
-      --radius-xl: 2.2rem;
-      --radius: 1.1rem;
-      --shadow: 0 8px 32px 0 rgba(0,0,0,0.08);
-      --text: #222;
-      --sub: #666;
-      --btn: #0071e3;
-      --btn-hover: #005bb5;
-    }
     body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #eef2f3, #8e9eab);
       margin: 0;
-      padding: 0;
-      font-family: "San Francisco", "Segoe UI", Arial, sans-serif;
-      background: var(--main-bg);
-      color: var(--text);
-      min-height: 100vh;
+      padding: 40px 20px;
     }
-    .wrap {
+    h1 {
+      text-align: center;
+      font-size: 3rem;
+      color: #1f2937;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    .search-box {
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      padding: 3rem 0 1rem 0;
-      gap: 2.5rem;
-      max-width: 960px;
+      margin-bottom: 30px;
+    }
+    input {
+      width: 100%;
+      max-width: 500px;
+      padding: 14px 20px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      outline: none;
+    }
+    .results {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
       margin: 0 auto;
     }
-    .sidebar {
-      min-width: 250px;
-      background: var(--card-bg);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-      padding: 2rem 1.2rem 2rem 1.2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-      align-items: stretch;
-      height: fit-content;
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      transition: all 0.2s ease;
     }
-    .country-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.7rem 1rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: 700;
-      transition: background 0.12s, color 0.14s;
-      color: var(--text);
-      border: 2px solid transparent;
-      background: none;
-      outline: none;
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
-    .country-item.active, .country-item:focus, .country-item:hover {
-      background: #f0f4fa;
-      color: var(--brand);
-      border: 2px solid var(--brand);
-    }
-    .country-flag {
-      font-size: 1.7rem;
-      margin-right: 0.1em;
-      filter: drop-shadow(0 1px 1px #eee);
-    }
-    .main-panel {
-      flex: 1 1 0;
-      background: var(--card-bg);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-      padding: 2.5rem 2.2rem 2rem 2.2rem;
-      min-width: 350px;
-      min-height: 300px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
-    .main-panel .title {
-      font-size: 1.6rem;
-      font-weight: 900;
-      color: var(--brand);
-      margin-bottom: 0.3rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .main-panel .desc {
-      color: var(--sub);
-      font-size: 1.08rem;
-      margin-bottom: 1.3rem;
-    }
-    .plans-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1.1rem;
-    }
-    .plan-card {
-      background: var(--main-bg);
-      border-radius: var(--radius);
-      box-shadow: 0 2px 10px 0 rgba(0,0,0,0.04);
-      padding: 1.3rem 1.1rem 1.2rem 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 2.5rem;
-      border: 1.5px solid #ececec;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-    .plan-info {
-      flex: 1 1 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      min-width: 180px;
-    }
-    .plan-days {
-      font-size: 1.08rem;
-      font-weight: 700;
-    }
-    .plan-data {
-      font-size: 1.06rem;
-      color: var(--brand);
-      font-weight: 800;
-    }
-    .plan-desc {
-      font-size: 0.98rem;
-      color: var(--sub);
-      margin-top: 0.2rem;
-    }
-    .plan-price {
+    .card h3 {
+      margin: 0;
       font-size: 1.3rem;
-      font-weight: 900;
-      color: var(--brand);
-      min-width: 54px;
-      text-align: right;
+      color: #2563eb;
     }
-    .buy-btn {
-      margin-left: 1.5rem;
-      background: var(--btn);
-      color: #fff;
-      font-weight: 700;
-      font-size: 1.01rem;
-      border: none;
-      border-radius: 2rem;
-      padding: 0.65rem 1.8rem;
-      cursor: pointer;
-      transition: background 0.14s;
-      box-shadow: 0 2px 8px 0 rgba(0,112,233,0.09);
-      outline: none;
-      letter-spacing: 0.01em;
-    }
-    .buy-btn:hover {
-      background: var(--btn-hover);
-    }
-    @media (max-width: 800px) {
-      .wrap {
-        flex-direction: column;
-        gap: 1.5rem;
-        padding: 1.2rem 0.5rem;
-        align-items: stretch;
-      }
-      .sidebar, .main-panel {
-        border-radius: 1.2rem;
-        min-width: 0;
-        padding: 1.2rem 0.8rem 1.2rem 0.8rem;
-      }
-      .main-panel {
-        padding: 1.5rem 0.8rem 1rem 0.8rem;
-      }
-    }
-    @media (max-width: 600px) {
-      .plan-card {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.8rem;
-      }
-      .buy-btn {
-        width: 100%;
-        text-align: center;
-        margin-left: 0;
-      }
+    .card p {
+      margin: 8px 0;
+      font-size: 0.95rem;
     }
   </style>
 </head>
 <body>
-  <div style="display:flex;align-items:center;gap:0.7rem;justify-content:center;margin-top:1.5rem;margin-bottom:-2.5rem;">
-    <img src="https://em-content.zobj.net/source/apple/391/globe-showing-europe-africa_1f30d.png" alt="eSIM" style="width:2.4rem;height:2.4rem;border-radius:1rem;">
-    <span style="font-size:2rem;font-weight:900;color:#0071e3;letter-spacing:0.03em;">Roampass</span>
-  </div>
-  <div class="wrap">
-    <div class="sidebar" id="countryList">
-      <span style="color:#777;font-size:1.08rem;font-weight:600;margin-bottom:0.6rem;">Select Country/Region</span>
-    </div>
-    <div class="main-panel" id="mainPanel">
-      <div style="color:#aaa;text-align:center;">Please select a country/region<br>on the left to view available plans</div>
-    </div>
-  </div>
-  <footer style="text-align:center;color:#888;font-size:0.96rem;margin:1.8rem 0 0.5rem 0;">
-    WeChat: <span style="color:#0071e3;font-weight:600;">esimroampass</span>
-    &nbsp;|&nbsp; Email: <span style="color:#0071e3;font-weight:600;">hi@roampass.com</span><br>
-    &copy; 2025 Roampass
-  </footer>
-  <script>
-    let data = [];
-    let selectedIdx = -1;
 
-    fetch('./roampass_esim_plans.json')
-      .then(r => r.json())
-      .then(flatList => {
-        // 1. 自动清理所有国家名的前后空白、NBSP
-        flatList.forEach(item => {
-          if (item['Region']) item['Region'] = String(item['Region']).replace(/^[\s\u00A0]+|[\s\u00A0]+$/g, '');
-        });
-        // 2. 自动聚合为国家=>套餐
-        const countryMap = {};
-        flatList.forEach(item => {
-          const country = item['Region'] || 'Unknown';
-          if (!countryMap[country]) {
-            countryMap[country] = [];
-          }
-          countryMap[country].push(item);
-        });
-        // 3. 转为页面数据结构
-        data = Object.keys(countryMap).map(country => ({
-          country,
-          flag: getFlagEmoji(country),
-          plans: countryMap[country].map(plan => ({
-            days: plan["Validity (Days)"] || "",
-            data: (typeof plan["Data (GB)"] === "number" ? plan["Data (GB)"] + "GB" : (plan["Data (GB)"] || "")),
-            price: plan["RRP info"] || "",
-            desc: plan["Traffic Policy"] || "",
-            name: plan["Name"] || ""
-          }))
-        }));
-        renderCountryList();
-        if (data.length > 0) selectCountry(0);
-      })
-      .catch(e => {
-        document.getElementById('mainPanel').innerHTML =
-          `<div style="color:red;text-align:center;font-size:1.2rem;">Failed to load data: ${e.message}</div>`;
-      });
+<h1>你要去哪儿？🌍</h1>
+<div class="search-box">
+  <input id="searchInput" placeholder="输入国家名（如 Japan、Spain、USA）..." />
+</div>
+<div class="results" id="results"></div>
 
-    function getFlagEmoji(country) {
-      // 你可以扩展所有国家
-      const flags = {
-        Afghanistan: "🇦🇫", Albania: "🇦🇱", Algeria: "🇩🇿", Andorra: "🇦🇩", Anguilla: "🇦🇮",
-        "Antigua and Barbuda": "🇦🇬", Argentina: "🇦🇷", Armenia: "🇦🇲", Aruba: "🇦🇼", Australia: "🇦🇺",
-        Austria: "🇦🇹", Azerbaijan: "🇦🇿", "United Kingdom": "🇬🇧", France: "🇫🇷", Spain: "🇪🇸",
-        "Hong Kong": "🇭🇰", China: "🇨🇳"
-        // ...
-      };
-      let key = (country || '').trim();
-      return flags[key] || "🌐";
-    }
+<script>
+const input = document.getElementById("searchInput");
+const results = document.getElementById("results");
 
-    function renderCountryList() {
-      const list = document.getElementById('countryList');
-      list.innerHTML = `<span style="color:#777;font-size:1.08rem;font-weight:600;margin-bottom:0.6rem;">Select Country/Region</span>`;
-      data.forEach((item, idx) => {
-        const el = document.createElement('button');
-        el.className = 'country-item' + (idx === selectedIdx ? ' active' : '');
-        el.innerHTML = `<span class="country-flag">${item.flag || ''}</span> ${item.country}`;
-        el.onclick = () => selectCountry(idx);
-        list.appendChild(el);
-      });
-    }
-    function selectCountry(idx) {
-      selectedIdx = idx;
-      renderCountryList();
-      const panel = document.getElementById('mainPanel');
-      const country = data[idx];
-      panel.innerHTML = `
-        <div class="title"><span class="country-flag">${country.flag || ''}</span>${country.country}</div>
-        <div class="desc">Available Plans (buy as many as you like)</div>
-        <div class="plans-list">
-          ${
-            country.plans && country.plans.length > 0 ?
-            country.plans.map(plan => `
-              <div class="plan-card">
-                <div class="plan-info">
-                  <span class="plan-days">${plan.days} days</span>
-                  <span class="plan-data">${plan.data}</span>
-                  <span class="plan-desc">${plan.desc || ''}</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:1.2rem;">
-                  <span class="plan-price">€${plan.price}</span>
-                  <button class="buy-btn" disabled>Buy</button>
-                </div>
-              </div>
-            `).join('')
-            : `<div style="color:#aaa;">No plans available</div>`
-          }
-        </div>
-      `;
-    }
-  </script>
+async function fetchProducts() {
+  const res = await fetch("https://prices.ps8w72dmnh.workers.dev");
+  const data = await res.json();
+  return data.data || [];
+}
+
+async function fetchPrices(productId) {
+  const res = await fetch("https://prices.ps8w72dmnh.workers.dev?product=" + productId);
+  const data = await res.json();
+  return data.data || [];
+}
+
+input.addEventListener("input", async () => {
+  const val = input.value.trim().toLowerCase();
+  results.innerHTML = "";
+
+  if (!val) return;
+
+  const products = await fetchProducts();
+  const match = products.find(p => p.name.toLowerCase() === val);
+  if (!match) {
+    results.innerHTML = "<p style='text-align:center;'>未找到对应国家</p>";
+    return;
+  }
+
+  const prices = await fetchPrices(match.id);
+  prices.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h3>${match.name}</h3>
+      <p><strong>SKU:</strong> ${p.nickname || p.id}</p>
+      <p><strong>价格:</strong> €${(p.unit_amount / 100).toFixed(2)}</p>
+    `;
+    results.appendChild(card);
+  });
+});
+</script>
+
 </body>
 </html>
