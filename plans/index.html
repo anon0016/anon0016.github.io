@@ -1,71 +1,74 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roampass eSIM | Stay Connected Wherever You Go</title>
+  <title>Roampass eSIM | Stay Connected</title>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #eff6ff;
+      background-color: #f1f7ff;
       color: #1e3a8a;
     }
     header {
+      background-color: #1e3a8a;
+      color: white;
+      padding: 20px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 32px;
-      background-color: #1e3a8a;
-      color: white;
     }
     header h1 {
       font-size: 1.5rem;
     }
     nav a {
-      margin-left: 20px;
       color: white;
+      margin-left: 20px;
       text-decoration: none;
-      font-size: 0.95rem;
+      font-size: 1rem;
     }
     .hero {
       text-align: center;
-      padding: 60px 20px;
+      padding: 60px 20px 30px;
     }
     .hero h2 {
-      font-size: 2.5rem;
-      margin: 0;
+      font-size: 2.2rem;
+      margin: 10px 0;
     }
     .hero h2 span {
       color: #2563eb;
     }
     .hero p {
       font-size: 1rem;
-      margin: 20px 0;
       max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto 30px;
     }
-    .hero input {
-      width: 60%;
+    .search-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    .search-container input {
       padding: 12px 16px;
+      width: 300px;
       border: 1px solid #ccc;
-      border-radius: 10px;
+      border-radius: 8px;
       font-size: 1rem;
     }
-    .hero button {
-      padding: 12px 16px;
-      margin-left: 8px;
-      border: none;
+    .search-container button {
+      padding: 12px;
       background-color: #3b82f6;
       color: white;
-      border-radius: 10px;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 1.2rem;
     }
     .results {
-      text-align: center;
       margin-top: 20px;
+      text-align: center;
       font-size: 1.1rem;
     }
     .features {
@@ -73,13 +76,12 @@
       justify-content: center;
       flex-wrap: wrap;
       padding: 40px 20px;
-      background: #ffffff;
-      color: #1e3a8a;
+      background: #fff;
     }
     .feature {
       text-align: center;
-      width: 180px;
-      margin: 10px;
+      width: 200px;
+      margin: 20px;
     }
     .feature h3 {
       font-size: 1.1rem;
@@ -88,6 +90,15 @@
     .feature p {
       font-size: 0.9rem;
       color: #475569;
+    }
+    .results a {
+      font-weight: bold;
+      color: #1e3a8a;
+      text-decoration: underline;
+    }
+    .check {
+      color: #22c55e;
+      font-size: 1.2rem;
     }
   </style>
 </head>
@@ -100,17 +111,20 @@
       <a href="#">Reviews</a>
       <a href="#">FAQs</a>
       <a href="#">Contact</a>
-      <a href="#">Log in</a>
     </nav>
   </header>
+
   <section class="hero">
-    <h1>International eSIM card</h1>
+    <p>International eSIM card</p>
     <h2>Stay connected <span>wherever</span> you go</h2>
     <p>With Roampass eSIM, enjoy instant internet on every trip, and forget roaming charges forever.</p>
-    <input type="text" id="search" placeholder="Where do you need internet?">
-    <button onclick="searchCountries()">🔍</button>
+    <div class="search-container">
+      <input type="text" id="search" placeholder="Search your destination...">
+      <button onclick="searchCountries()">🔍</button>
+    </div>
     <div id="results" class="results"></div>
   </section>
+
   <section class="features">
     <div class="feature">
       <h3>Unlimited data</h3>
@@ -129,6 +143,7 @@
       <p>Activate your eSIM in just minutes via email.</p>
     </div>
   </section>
+
   <script>
     let countryData = [];
 
@@ -149,7 +164,7 @@
       const results = document.getElementById("results");
       const match = countryData.find(c => c.name.toLowerCase() === query);
       results.innerHTML = match
-        ? `✅ eSIM available in <strong><a href="/esim-${match.name.toLowerCase()}" target="_blank">${match.name}</a></strong>`
+        ? `<span class='check'>✅</span> eSIM available in <a href='/esim.html?${match.name.toLowerCase()}.html' target='_blank'>${match.name}</a>`
         : "❌ No match found";
     }
   </script>
