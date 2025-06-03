@@ -1,119 +1,157 @@
 
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>你要去哪儿？🌍</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roampass eSIM | Stay Connected Wherever You Go</title>
   <style>
     body {
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #eef2f3, #8e9eab);
-      margin: 0;
-      padding: 40px 20px;
+      background-color: #eff6ff;
+      color: #1e3a8a;
     }
-    h1 {
-      text-align: center;
-      font-size: 3rem;
-      color: #1f2937;
-      margin-bottom: 30px;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    }
-    .search-box {
+    header {
       display: flex;
-      justify-content: center;
-      margin-bottom: 30px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      background-color: #1e3a8a;
+      color: white;
     }
-    input {
-      width: 100%;
-      max-width: 500px;
-      padding: 14px 20px;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      outline: none;
+    header h1 {
+      font-size: 1.5rem;
     }
-    .results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 24px;
-      max-width: 1200px;
-      margin: 0 auto;
+    nav a {
+      margin-left: 20px;
+      color: white;
+      text-decoration: none;
+      font-size: 0.95rem;
     }
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
+    .hero {
       text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      transition: all 0.2s ease;
+      padding: 60px 20px;
     }
-    .card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
-    .card h3 {
+    .hero h2 {
+      font-size: 2.5rem;
       margin: 0;
-      font-size: 1.3rem;
+    }
+    .hero h2 span {
       color: #2563eb;
     }
-    .card p {
-      margin: 8px 0;
-      font-size: 0.95rem;
+    .hero p {
+      font-size: 1rem;
+      margin: 20px 0;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero input {
+      width: 60%;
+      padding: 12px 16px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+    .hero button {
+      padding: 12px 16px;
+      margin-left: 8px;
+      border: none;
+      background-color: #3b82f6;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .results {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.1rem;
+    }
+    .features {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 40px 20px;
+      background: #ffffff;
+      color: #1e3a8a;
+    }
+    .feature {
+      text-align: center;
+      width: 180px;
+      margin: 10px;
+    }
+    .feature h3 {
+      font-size: 1.1rem;
+      margin: 10px 0 5px;
+    }
+    .feature p {
+      font-size: 0.9rem;
+      color: #475569;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Roampass</h1>
+    <nav>
+      <a href="#">Destinations</a>
+      <a href="#">About</a>
+      <a href="#">Reviews</a>
+      <a href="#">FAQs</a>
+      <a href="#">Contact</a>
+      <a href="#">Log in</a>
+    </nav>
+  </header>
+  <section class="hero">
+    <h1>International eSIM card</h1>
+    <h2>Stay connected <span>wherever</span> you go</h2>
+    <p>With Roampass eSIM, enjoy instant internet on every trip, and forget roaming charges forever.</p>
+    <input type="text" id="search" placeholder="Where do you need internet?">
+    <button onclick="searchCountries()">🔍</button>
+    <div id="results" class="results"></div>
+  </section>
+  <section class="features">
+    <div class="feature">
+      <h3>Unlimited data</h3>
+      <p>Get unlimited plans in multiple destinations.</p>
+    </div>
+    <div class="feature">
+      <h3>No roaming fees</h3>
+      <p>Travel and connect freely without hidden costs.</p>
+    </div>
+    <div class="feature">
+      <h3>Keep your SIM</h3>
+      <p>Use your physical SIM for calls while using Roampass for data.</p>
+    </div>
+    <div class="feature">
+      <h3>Instant setup</h3>
+      <p>Activate your eSIM in just minutes via email.</p>
+    </div>
+  </section>
+  <script>
+    let countryData = [];
 
-<h1>你要去哪儿？🌍</h1>
-<div class="search-box">
-  <input id="searchInput" placeholder="输入国家名（如 Japan、Spain、USA）..." />
-</div>
-<div class="results" id="results"></div>
+    async function loadCountriesFromCSV() {
+      const response = await fetch("products.csv");
+      const text = await response.text();
+      const rows = text.split("\n").slice(1);
+      countryData = rows.map(row => {
+        const cols = row.split(',');
+        return { name: cols[1]?.trim(), id: cols[0]?.trim() };
+      }).filter(c => c.name);
+    }
 
-<script>
-const input = document.getElementById("searchInput");
-const results = document.getElementById("results");
+    window.addEventListener("DOMContentLoaded", loadCountriesFromCSV);
 
-async function fetchProducts() {
-  const res = await fetch("https://prices.ps8w72dmnh.workers.dev");
-  const data = await res.json();
-  return data.data || [];
-}
-
-async function fetchPrices(productId) {
-  const res = await fetch("https://prices.ps8w72dmnh.workers.dev?product=" + productId);
-  const data = await res.json();
-  return data.data || [];
-}
-
-input.addEventListener("input", async () => {
-  const val = input.value.trim().toLowerCase();
-  results.innerHTML = "";
-
-  if (!val) return;
-
-  const products = await fetchProducts();
-  const match = products.find(p => p.name.toLowerCase() === val);
-  if (!match) {
-    results.innerHTML = "<p style='text-align:center;'>未找到对应国家</p>";
-    return;
-  }
-
-  const prices = await fetchPrices(match.id);
-  prices.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <h3>${match.name}</h3>
-      <p><strong>SKU:</strong> ${p.nickname || p.id}</p>
-      <p><strong>价格:</strong> €${(p.unit_amount / 100).toFixed(2)}</p>
-    `;
-    results.appendChild(card);
-  });
-});
-</script>
-
+    function searchCountries() {
+      const query = document.getElementById("search").value.trim().toLowerCase();
+      const results = document.getElementById("results");
+      const match = countryData.find(c => c.name.toLowerCase() === query);
+      results.innerHTML = match
+        ? `✅ eSIM available in <strong><a href="/esim-${match.name.toLowerCase()}" target="_blank">${match.name}</a></strong>`
+        : "❌ No match found";
+    }
+  </script>
 </body>
 </html>
