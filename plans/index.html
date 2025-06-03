@@ -1,172 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roampass eSIM | Stay Connected</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f1f7ff;
-      color: #1e3a8a;
-    }
-    header {
-      background-color: #1e3a8a;
-      color: white;
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h1 {
-      font-size: 1.5rem;
-    }
-    nav a {
-      color: white;
-      margin-left: 20px;
-      text-decoration: none;
-      font-size: 1rem;
-    }
-    .hero {
-      text-align: center;
-      padding: 60px 20px 30px;
-    }
-    .hero h2 {
-      font-size: 2.2rem;
-      margin: 10px 0;
-    }
-    .hero h2 span {
-      color: #2563eb;
-    }
-    .hero p {
-      font-size: 1rem;
-      max-width: 600px;
-      margin: 0 auto 30px;
-    }
-    .search-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
-    .search-container input {
-      padding: 12px 16px;
-      width: 300px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-    .search-container button {
-      padding: 12px;
-      background-color: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-    .results {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 1.1rem;
-    }
-    .features {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      padding: 40px 20px;
-      background: #fff;
-    }
-    .feature {
-      text-align: center;
-      width: 200px;
-      margin: 20px;
-    }
-    .feature h3 {
-      font-size: 1.1rem;
-      margin: 10px 0 5px;
-    }
-    .feature p {
-      font-size: 0.9rem;
-      color: #475569;
-    }
-    .results a {
-      font-weight: bold;
-      color: #1e3a8a;
-      text-decoration: underline;
-    }
-    .check {
-      color: #22c55e;
-      font-size: 1.2rem;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Roampass</h1>
-    <nav>
-      <a href="#">Destinations</a>
-      <a href="#">About</a>
-      <a href="#">Reviews</a>
-      <a href="#">FAQs</a>
-      <a href="#">Contact</a>
-    </nav>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roampass — Global eSIM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(180deg, #f5f7fa 0%, #e3eaf3 100%);
+        color: #202124;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-  <section class="hero">
-    <p>International eSIM card</p>
-    <h2>Stay connected <span>wherever</span> you go</h2>
-    <p>With Roampass eSIM, enjoy instant internet on every trip, and forget roaming charges forever.</p>
-    <div class="search-container">
-      <input type="text" id="search" placeholder="Search your destination...">
-      <button onclick="searchCountries()">🔍</button>
-    </div>
-    <div id="results" class="results"></div>
-  </section>
+      header {
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      header h1 {
+        font-size: 2.8rem;
+        font-weight: 600;
+        color: #111;
+      }
 
-  <section class="features">
-    <div class="feature">
-      <h3>Unlimited data</h3>
-      <p>Get unlimited plans in multiple destinations.</p>
-    </div>
-    <div class="feature">
-      <h3>No roaming fees</h3>
-      <p>Travel and connect freely without hidden costs.</p>
-    </div>
-    <div class="feature">
-      <h3>Keep your SIM</h3>
-      <p>Use your physical SIM for calls while using Roampass for data.</p>
-    </div>
-    <div class="feature">
-      <h3>Instant setup</h3>
-      <p>Activate your eSIM in just minutes via email.</p>
-    </div>
-  </section>
+      .search-wrapper {
+        margin: 3rem auto;
+        width: 90%;
+        max-width: 540px;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      .search-wrapper input {
+        width: 100%;
+        padding: 16px 24px;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 50px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        outline: none;
+      }
 
-  <script>
-    let countryData = [];
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 2rem;
+        padding: 3rem 2rem;
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .feature-box {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        transition: transform 0.2s ease;
+      }
+      .feature-box:hover {
+        transform: translateY(-4px);
+      }
+      .feature-box h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+        color: #1a73e8;
+      }
+      .feature-box p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: #444;
+      }
 
-    async function loadCountriesFromCSV() {
-      const response = await fetch("products.csv");
-      const text = await response.text();
-      const rows = text.split("\n").slice(1);
-      countryData = rows.map(row => {
-        const cols = row.split(',');
-        return { name: cols[1]?.trim(), id: cols[0]?.trim() };
-      }).filter(c => c.name);
-    }
+      footer {
+        margin-top: auto;
+        padding: 2rem;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #888;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Roampass</h1>
+      <div class="search-wrapper">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Where do you need data? (e.g., USA)"
+        />
+      </div>
+    </header>
 
-    window.addEventListener("DOMContentLoaded", loadCountriesFromCSV);
+    <section class="features">
+      <div class="feature-box">
+        <h3>🌍 Global Coverage</h3>
+        <p>Instant data in over 190+ countries. Stay connected anywhere, anytime with Roampass.</p>
+      </div>
+      <div class="feature-box">
+        <h3>⚡ Fast Activation</h3>
+        <p>Scan, tap, connect — it’s that simple. Your eSIM is ready in seconds.</p>
+      </div>
+      <div class="feature-box">
+        <h3>💳 Pay As You Go</h3>
+        <p>No contracts. Only pay for the data you need. Plans starting from just €4.99.</p>
+      </div>
+    </section>
 
-    function searchCountries() {
-      const query = document.getElementById("search").value.trim().toLowerCase();
-      const results = document.getElementById("results");
-      const match = countryData.find(c => c.name.toLowerCase() === query);
-      results.innerHTML = match
-        ? `<span class='check'>✅</span> eSIM available in <a href='/esim.html?${match.name.toLowerCase()}.html' target='_blank'>${match.name}</a>`
-        : "❌ No match found";
-    }
-  </script>
-</body>
+    <footer>
+      © 2025 Roampass. All rights reserved.
+    </footer>
+
+    <script>
+      const input = document.getElementById("searchInput");
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          const keyword = input.value.trim().toLowerCase();
+          if (keyword) {
+            window.location.href = `esim-details.html?country=${encodeURIComponent(keyword)}`;
+          }
+        }
+      });
+    </script>
+  </body>
 </html>
