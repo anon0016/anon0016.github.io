@@ -245,16 +245,40 @@
             .main-section { padding: 24px 0 0 0; }
         }
     </style>
-    <script>
-        function searchCountry() {
-            var input = document.getElementById('countrySearch').value.toLowerCase();
-            var cards = document.getElementsByClassName('country-card');
-            for (let card of cards) {
-                let text = card.textContent.toLowerCase();
-                card.style.display = text.includes(input) ? '' : 'none';
-            }
-        }
-    </script>
+<div id="country-list" class="country-grid"></div>
+<script>
+// 随机排序工具
+function shuffle(arr) {
+    let a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// 动态拉取JSON，生成国家卡片
+fetch('/plans/esim_country_grouped.json')
+  .then(res => res.json())
+  .then(data => {
+    // 国家名自动去掉空格前缀（有的有 \xa0 前缀），并去重
+    const countryNames = Object.keys(data)
+      .map(c => c.replace(/^[\s\xa0]+/g, '').trim())
+      .filter(Boolean);
+
+    // 随机排序（如只要10个可 .slice(0, 10)）
+    const randomCountries = shuffle(countryNames);
+
+    // 渲染
+    document.getElementById('country-list').innerHTML = randomCountries.map(country => `
+      <div class="country-card" style="align-items:center;text-align:center;">
+        <div class="country-name" style="font-size:1.13rem;font-weight:700;margin-bottom:12px;">${country}</div>
+        <a href="/country/${encodeURIComponent(country)}"><button class="buy-btn">Buy Now</button></a>
+      </div>
+    `).join('');
+  });
+</script>
+
 </head>
 <body>
     <div class="hero">
