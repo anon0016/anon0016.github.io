@@ -1,157 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roampass — Travel eSIM Simplified</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-    }
-    .animate-fade-up {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.7s ease;
-    }
-    .animate-fade-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .btn-brand {
-      background: linear-gradient(to right, #1a73e8, #34a853);
-      color: white;
-      font-weight: 500;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem;
-      transition: all 0.3s ease;
-    }
-    .btn-brand:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-    }
-      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&display=swap');
-  </style>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1 });
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roampass | Global eSIM for Travelers, Students, Nomads</title>
+    <meta name="description" content="Instant global eSIM for every country. Fast delivery, secure payment, no registration. Roampass: your passport to borderless internet.">
+    <link rel="icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main: #1a1a2e;
+            --accent: #f50057;
+            --bg: #f8faff;
+            --card: #fff;
+            --radius: 20px;
+            --shadow: 0 8px 32px rgba(50,60,100,0.09);
+        }
+        body {
+            margin: 0;
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+        .hero {
+            padding: 48px 0 32px 0;
+            background: linear-gradient(270deg, #627fff, #7d52ff, #f50057, #ff8b6a, #627fff);
+            background-size: 200% 200%;
+            animation: gradientMove 8s ease-in-out infinite;
+            color: #fff;
+            text-align: center;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            box-shadow: var(--shadow);
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .logo {
+            font-size: 2.7rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 18px;
+            user-select: none;
+        }
+        .hero-title {
+            font-size: 2.3rem;
+            font-weight: 900;
+            margin: 0 0 15px 0;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.12);
+        }
+        .hero-desc {
+            font-size: 1.19rem;
+            opacity: .96;
+            margin-bottom: 18px;
+        }
+        .cta-btn {
+            background: #fff;
+            color: var(--accent);
+            padding: 16px 40px;
+            font-size: 1.13rem;
+            border: none;
+            border-radius: 99px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.23s, color 0.23s, box-shadow 0.18s;
+            box-shadow: 0 2px 18px rgba(50,50,80,.11);
+        }
+        .cta-btn:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+        .main-section {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 36px 16px 0 16px;
+        }
+        .search-area {
+            max-width: 480px;
+            margin: 0 auto 32px auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border-radius: 99px;
+            box-shadow: 0 2px 18px rgba(60,70,100,0.08);
+            padding: 6px 10px 6px 22px;
+        }
+        .search-input {
+            border: none;
+            background: none;
+            font-size: 1.09rem;
+            flex: 1;
+            outline: none;
+            padding: 12px 0;
+        }
+        .search-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 99px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        .search-btn:hover { background: #627fff; }
 
-      document.querySelectorAll('.animate-fade-up').forEach(el => observer.observe(el));
-    });
-  </script>
+        .country-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px 18px;
+            margin: 0 auto 20px auto;
+            max-width: 1280px;
+        }
+        .country-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 28px 28px 20px 28px;
+            width: 265px;
+            min-width: 210px;
+            transition: transform 0.15s, box-shadow 0.13s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .country-card:hover {
+            transform: translateY(-8px) scale(1.025);
+            box-shadow: 0 14px 34px rgba(90,60,140,0.13);
+        }
+        .country-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .flag {
+            width: 38px;
+            border-radius: 7px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.08);
+            margin-right: 10px;
+        }
+        .country-name {
+            font-size: 1.13rem;
+            font-weight: 700;
+        }
+        .package {
+            font-size: .97rem;
+            margin: 9px 0 2px 0;
+        }
+        .price {
+            color: var(--accent);
+            font-size: 1.32rem;
+            font-weight: 900;
+            margin-bottom: 14px;
+        }
+        .buy-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 99px;
+            padding: 10px 30px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.18s;
+            align-self: flex-end;
+        }
+        .buy-btn:hover { background: #627fff; }
+
+        .features-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px 18px;
+            margin: 36px auto 20px auto;
+            max-width: 1280px;
+        }
+        .feature-box {
+            background: linear-gradient(97deg,#fafdff 60%, #f7f8fb 100%);
+            box-shadow: 0 4px 18px rgba(120,150,200,0.09);
+            border-radius: 16px;
+            padding: 24px 24px 18px 24px;
+            width: 265px;
+            min-width: 200px;
+            margin-bottom: 10px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .feature-title {
+            font-size: 1.13rem;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+        .feature-desc {
+            font-size: 1.01rem;
+            color: #555;
+            line-height: 1.5;
+        }
+        .faq {
+            max-width: 880px;
+            margin: 48px auto 0 auto;
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px 28px 26px 28px;
+        }
+        .faq h2 {
+            margin-top: 0;
+            font-size: 1.25rem;
+            color: var(--main);
+        }
+        .faq dt {
+            font-weight: bold;
+            margin-top: 16px;
+            font-size: 1.06rem;
+        }
+        .faq dd {
+            margin: 3px 0 10px 0;
+            color: #444;
+        }
+        .footer {
+            text-align: center;
+            font-size: 1.01rem;
+            color: #666;
+            margin: 34px 0 16px 0;
+            opacity: .85;
+        }
+        @media (max-width: 1200px) {
+            .main-section, .features-row, .country-grid { max-width: 98vw; }
+            .country-card, .feature-box { width: 96vw; min-width: 0; }
+        }
+        @media (max-width: 700px) {
+            .country-card, .feature-box { width: 97vw; padding:18px 6vw 18px 6vw; }
+            .faq { padding: 14px 4vw 16px 4vw; }
+            .main-section { padding: 24px 0 0 0; }
+        }
+    </style>
+    <script>
+        function searchCountry() {
+            var input = document.getElementById('countrySearch').value.toLowerCase();
+            var cards = document.getElementsByClassName('country-card');
+            for (let card of cards) {
+                let text = card.textContent.toLowerCase();
+                card.style.display = text.includes(input) ? '' : 'none';
+            }
+        }
+    </script>
 </head>
-<body class="bg-white text-gray-800">
-  <!-- Header -->
-  <header class="w-full sticky top-0 z-50 bg-white shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl md:text-3xl font-extrabold text-blue-600" style="font-family: 'Poppins', sans-serif;">Roampass</h1>
-      <nav class="space-x-6 text-base md:text-lg text-gray-700 font-medium" style="font-family: 'Poppins', sans-serif;">
-        <a href="#features" class="hover:text-blue-600">Features</a>
-        <a href="#plans" class="hover:text-blue-600">Plans</a>
-        <a href="#network" class="hover:text-blue-600">Coverage</a>
-        <a href="#faq" class="hover:text-blue-600">FAQ</a>
-        <a href="#contact" class="hover:text-blue-600">Contact</a>
-      </nav>
+<body>
+    <div class="hero">
+        <div class="logo">Roampass</div>
+        <div class="hero-title">Global eSIM — Instantly Connected, Anywhere</div>
+        <div class="hero-desc">
+            Instant eSIM for every country. Study, travel, work — all in one tap.<br>
+            5-minute activation. Secure payments. No roaming anxiety.
+        </div>
+        <a href="#countries"><button class="cta-btn">Shop eSIM Plans</button></a>
     </div>
-  </header>
-
-  <!-- Hero -->
-  <section class="bg-gradient-to-br from-blue-50 to-green-50 text-center py-24 px-6 animate-fade-up">
-    <h2 class="text-4xl font-bold mb-4">Travel connected. Anywhere.</h2>
-    <p class="text-gray-600 max-w-xl mx-auto mb-6">Roampass offers instant eSIM activation for travelers — no roaming fees, no physical SIMs, and no borders.</p>
-    <a href="/plans" class="btn-brand">View Plans</a>
-  </section>
-
-  <!-- Features -->
-  <section id="features" class="py-20 px-6 max-w-6xl mx-auto animate-fade-up">
-    <h3 class="text-2xl font-semibold text-center mb-10">What Makes Roampass Different</h3>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div>
-        <h4 class="font-medium text-blue-600 mb-2">eSIM Simplicity</h4>
-        <p class="text-gray-700">Activate your plan with just a QR code. Compatible with most modern phones.</p>
-      </div>
-      <div>
-        <h4 class="font-medium text-blue-600 mb-2">Global Coverage</h4>
-        <p class="text-gray-700">Access data in over 100 countries, optimized for traveler speed and reliability.</p>
-      </div>
-      <div>
-        <h4 class="font-medium text-blue-600 mb-2">No Roaming Fees</h4>
-        <p class="text-gray-700">Flat-rate prepaid plans. What you see is what you pay — no surprises.</p>
-      </div>
+    <div class="main-section">
+        <div class="search-area">
+            <input type="text" id="countrySearch" class="search-input" placeholder="Search your destination (e.g. France, Spain...)" onkeyup="searchCountry()">
+            <button class="search-btn" onclick="searchCountry()">Search</button>
+        </div>
+        <div id="countries" class="country-grid">
+            <div class="country-card">
+                <div class="country-header">
+                    <img src="https://flagcdn.com/gb.svg" class="flag" alt="UK">
+                    <span class="country-name">United Kingdom</span>
+                </div>
+                <div class="package">5GB / 7 days / 5G Ready</div>
+                <div class="price">€8.99</div>
+                <a href="/esim-uk"><button class="buy-btn">Buy Now</button></a>
+            </div>
+            <div class="country-card">
+                <div class="country-header">
+                    <img src="https://flagcdn.com/fr.svg" class="flag" alt="France">
+                    <span class="country-name">France</span>
+                </div>
+                <div class="package">3GB / 7 days / 5G Ready</div>
+                <div class="price">€7.99</div>
+                <a href="/esim-fr"><button class="buy-btn">Buy Now</button></a>
+            </div>
+            <div class="country-card">
+                <div class="country-header">
+                    <img src="https://flagcdn.com/es.svg" class="flag" alt="Spain">
+                    <span class="country-name">Spain</span>
+                </div>
+                <div class="package">10GB / 14 days / 5G Ready</div>
+                <div class="price">€12.99</div>
+                <a href="/esim-es"><button class="buy-btn">Buy Now</button></a>
+            </div>
+            <div class="country-card">
+                <div class="country-header">
+                    <img src="https://flagcdn.com/us.svg" class="flag" alt="USA">
+                    <span class="country-name">United States</span>
+                </div>
+                <div class="package">7GB / 15 days / 5G Ready</div>
+                <div class="price">€14.99</div>
+                <a href="/esim-us"><button class="buy-btn">Buy Now</button></a>
+            </div>
+        </div>
+        <div class="features-row">
+            <div class="feature-box">
+                <div class="feature-title">🚀 Activate in Minutes</div>
+                <div class="feature-desc">No more SIM cards, no more lines. Buy, scan, and connect in under 5 minutes — straight from your phone.</div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-title">🌍 195+ Countries Covered</div>
+                <div class="feature-desc">From the UK to Japan, Roampass covers all major destinations. Perfect for travelers, expats, students, and digital nomads.</div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-title">💳 All Major Payments Accepted</div>
+                <div class="feature-desc">Pay with Alipay, WeChat, Apple Pay, Google Pay, or any credit card. 100% secure checkout. Get your eSIM by email instantly.</div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-title">🔒 Privacy First</div>
+                <div class="feature-desc">No personal registration required. Buy and use eSIM with maximum privacy. Your data stays your own.</div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-title">⚡ Real-time Delivery</div>
+                <div class="feature-desc">After payment, your eSIM QR code is emailed instantly. No waiting. No stress. You’re online in minutes.</div>
+            </div>
+        </div>
+        <div class="faq">
+            <h2>Frequently Asked Questions</h2>
+            <dl>
+                <dt>Which phones support eSIM?</dt>
+                <dd>iPhone XR and newer, iPads, and most modern Android flagships (Samsung S20+, Google Pixel 4+, etc.). Please check your device’s eSIM compatibility before purchasing.</dd>
+                <dt>What payment methods are supported?</dt>
+                <dd>Alipay, WeChat Pay, Apple Pay, Google Pay, Visa, Mastercard, and more.</dd>
+                <dt>How fast will I receive my eSIM?</dt>
+                <dd>Within 1 minute — the eSIM QR code and activation instructions will arrive by email, instantly after payment.</dd>
+                <dt>Can I get a refund?</dt>
+                <dd>If you haven’t activated the eSIM yet, full refunds are supported. Once activated, no refunds are possible.</dd>
+                <dt>Can I use this for long-term plans?</dt>
+                <dd>Perfect for travel, short-term stays, or as a backup number. Long-term plans available in selected countries — contact us for details.</dd>
+            </dl>
+        </div>
     </div>
-  </section>
-
-  <!-- Plans -->
-  <section id="plans" class="py-20 bg-gray-50 px-6 animate-fade-up">
-    <h3 class="text-2xl font-semibold text-center mb-6">Popular Plans</h3>
-    <p class="text-center text-gray-600 mb-10 max-w-xl mx-auto">Plans vary by destination and usage. Roampass offers short-term and long-term data bundles.</p>
-    <div class="flex flex-wrap justify-center gap-6">
-      <div class="p-6 rounded-xl bg-white shadow-md w-72">
-        <h4 class="font-semibold mb-2">Asia Travel Pack</h4>
-        <p class="text-sm text-gray-600">5GB | 30 days | 10+ countries</p>
-      </div>
-      <div class="p-6 rounded-xl bg-white shadow-md w-72">
-        <h4 class="font-semibold mb-2">EU Explorer</h4>
-        <p class="text-sm text-gray-600">10GB | 30 days | 30+ countries</p>
-      </div>
-      <div class="p-6 rounded-xl bg-white shadow-md w-72">
-        <h4 class="font-semibold mb-2">Global Pass</h4>
-        <p class="text-sm text-gray-600">1GB/day | 15 days | 100+ regions</p>
-      </div>
+    <div class="footer">
+        &copy; 2025 Roampass. Built by AI. Your next-gen eSIM companion 🪐 | <a href="mailto:support@roampass.com">Contact Us</a>
     </div>
-  </section>
-
-  <!-- Network -->
-  <section id="network" class="py-20 px-6 max-w-4xl mx-auto animate-fade-up">
-    <h3 class="text-2xl font-semibold text-center mb-4">Worldwide Coverage</h3>
-    <p class="text-center text-gray-600 mb-6">Roampass partners with global telecom infrastructure providers to deliver seamless service across continents.</p>
-    <ul class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-gray-700 text-sm">
-      <li>🇺🇸 USA</li>
-      <li>🇪🇸 Spain</li>
-      <li>🇸🇬 Singapore</li>
-      <li>🇦🇺 Australia</li>
-      <li>🇯🇵 Japan</li>
-      <li>🇰🇷 Korea</li>
-      <li>🇬🇧 UK</li>
-      <li>+ 100 more</li>
-    </ul>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq" class="py-20 bg-accent px-6 max-w-3xl mx-auto animate-fade-up">
-    <h3 class="text-2xl font-semibold text-center mb-8">Frequently Asked Questions</h3>
-    <div class="mb-4">
-      <h4 class="font-medium text-blue-600">What is an eSIM?</h4>
-      <p class="text-gray-700">A digital SIM that allows you to connect without inserting a physical card.</p>
-    </div>
-    <div class="mb-4">
-      <h4 class="font-medium text-blue-600">How do I receive my plan?</h4>
-      <p class="text-gray-700">We send a QR code to your email. Scan to install. That’s it.</p>
-    </div>
-    <div class="mb-4">
-      <h4 class="font-medium text-blue-600">Can I get a refund?</h4>
-      <p class="text-gray-700">Refunds are available before QR code activation, or if your device is incompatible.</p>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact" class="py-20 px-6 text-center animate-fade-up">
-    <h3 class="text-2xl font-semibold mb-4">Still have questions?</h3>
-    <p class="text-gray-700 mb-2">Reach out anytime. We're here to help.</p>
-    <p class="text-blue-600 text-lg"><a href="mailto:support@roampass.uk">support@roampass.uk</a></p>
-    <p class="mt-2 text-blue-600"><a href="https://discord.gg/QWhXuvjQTz" target="_blank">Join Roampass Club on Discord</a></p>
-  </section>
-
-  <!-- Footer -->
-  <footer class="text-center py-6 text-sm text-gray-500 bg-gray-100">
-    &copy; 2025 Roampass. All rights reserved.
-  </footer>
 </body>
 </html>
