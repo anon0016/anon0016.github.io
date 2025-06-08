@@ -1,378 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roampass | Global eSIM for Travelers, Students, Nomads</title>
-    <meta name="description" content="Instant global eSIM for every country. Fast delivery, secure payment, no registration. Roampass: your passport to borderless internet.">
-    <link rel="icon" href="/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --main: #1a1a2e;
-            --accent: #f50057;
-            --bg: #f8faff;
-            --card: #fff;
-            --radius: 20px;
-            --shadow: 0 8px 32px rgba(50,60,100,0.09);
-        }
-        body {
-            margin: 0;
-            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-            background: var(--bg);
-            color: #1a1a2e;
-            min-height: 100vh;
-        }
-        .hero {
-            padding: 48px 0 32px 0;
-            background: linear-gradient(270deg, #627fff, #7d52ff, #f50057, #ff8b6a, #627fff);
-            background-size: 200% 200%;
-            animation: gradientMove 8s ease-in-out infinite;
-            color: #fff;
-            text-align: center;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
-            box-shadow: var(--shadow);
-        }
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .logo {
-            font-size: 2.7rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            margin-bottom: 18px;
-            user-select: none;
-        }
-        .hero-title {
-            font-size: 2.3rem;
-            font-weight: 900;
-            margin: 0 0 15px 0;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.12);
-        }
-        .hero-desc {
-            font-size: 1.19rem;
-            opacity: .96;
-            margin-bottom: 18px;
-        }
-        .cta-btn {
-            background: #fff;
-            color: var(--accent);
-            padding: 16px 40px;
-            font-size: 1.13rem;
-            border: none;
-            border-radius: 99px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.23s, color 0.23s, box-shadow 0.18s;
-            box-shadow: 0 2px 18px rgba(50,50,80,.11);
-        }
-        .cta-btn:hover {
-            background: var(--accent);
-            color: #fff;
-        }
-        .main-section {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 36px 16px 0 16px;
-        }
-        .search-area {
-            max-width: 480px;
-            margin: 0 auto 32px auto;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #fff;
-            border-radius: 99px;
-            box-shadow: 0 2px 18px rgba(60,70,100,0.08);
-            padding: 6px 10px 6px 22px;
-        }
-        .search-input {
-            border: none;
-            background: none;
-            font-size: 1.09rem;
-            flex: 1;
-            outline: none;
-            padding: 12px 0;
-        }
-        .search-btn {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 99px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.18s;
-        }
-        .search-btn:hover { background: #627fff; }
-
-        .country-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 24px 18px;
-            margin: 0 auto 20px auto;
-            max-width: 1280px;
-        }
-        .country-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 28px 28px 20px 28px;
-            width: 265px;
-            min-width: 210px;
-            transition: transform 0.15s, box-shadow 0.13s;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .country-card:hover {
-            transform: translateY(-8px) scale(1.025);
-            box-shadow: 0 14px 34px rgba(90,60,140,0.13);
-        }
-        .country-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .flag {
-            width: 38px;
-            border-radius: 7px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.08);
-            margin-right: 10px;
-        }
-        .country-name {
-            font-size: 1.13rem;
-            font-weight: 700;
-        }
-        .package {
-            font-size: .97rem;
-            margin: 9px 0 2px 0;
-        }
-        .price {
-            color: var(--accent);
-            font-size: 1.32rem;
-            font-weight: 900;
-            margin-bottom: 14px;
-        }
-        .buy-btn {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 99px;
-            padding: 10px 30px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.18s;
-            align-self: flex-end;
-        }
-        .buy-btn:hover { background: #627fff; }
-
-        .features-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 24px 18px;
-            margin: 36px auto 20px auto;
-            max-width: 1280px;
-        }
-        .feature-box {
-            background: linear-gradient(97deg,#fafdff 60%, #f7f8fb 100%);
-            box-shadow: 0 4px 18px rgba(120,150,200,0.09);
-            border-radius: 16px;
-            padding: 24px 24px 18px 24px;
-            width: 265px;
-            min-width: 200px;
-            margin-bottom: 10px;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-        .feature-title {
-            font-size: 1.13rem;
-            font-weight: 700;
-            margin-bottom: 7px;
-        }
-        .feature-desc {
-            font-size: 1.01rem;
-            color: #555;
-            line-height: 1.5;
-        }
-        .faq {
-            max-width: 880px;
-            margin: 48px auto 0 auto;
-            background: #fff;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 32px 28px 26px 28px;
-        }
-        .faq h2 {
-            margin-top: 0;
-            font-size: 1.25rem;
-            color: var(--main);
-        }
-        .faq dt {
-            font-weight: bold;
-            margin-top: 16px;
-            font-size: 1.06rem;
-        }
-        .faq dd {
-            margin: 3px 0 10px 0;
-            color: #444;
-        }
-        .footer {
-            text-align: center;
-            font-size: 1.01rem;
-            color: #666;
-            margin: 34px 0 16px 0;
-            opacity: .85;
-        }
-        @media (max-width: 1200px) {
-            .main-section, .features-row, .country-grid { max-width: 98vw; }
-            .country-card, .feature-box { width: 96vw; min-width: 0; }
-        }
-        @media (max-width: 700px) {
-            .country-card, .feature-box { width: 97vw; padding:18px 6vw 18px 6vw; }
-            .faq { padding: 14px 4vw 16px 4vw; }
-            .main-section { padding: 24px 0 0 0; }
-        }
-    </style>
-<div id="country-list" class="country-grid"></div>
-<script>
-// 随机排序工具
-function shuffle(arr) {
-    let a = arr.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+  <meta charset="UTF-8">
+  <title>Roampass | eSIM Countries</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', Arial, sans-serif;
+      background: #f8faff;
+      color: #1a1a2e;
+      min-height: 100vh;
     }
-    return a;
-}
-
-// 动态拉取JSON，生成国家卡片
-fetch('/plans/esim_country_grouped.json')
-  .then(res => res.json())
-  .then(data => {
-    // 国家名自动去掉空格前缀（有的有 \xa0 前缀），并去重
-    const countryNames = Object.keys(data)
-      .map(c => c.replace(/^[\s\xa0]+/g, '').trim())
-      .filter(Boolean);
-
-    // 随机排序（如只要10个可 .slice(0, 10)）
-    const randomCountries = shuffle(countryNames);
-
-    // 渲染
-    document.getElementById('country-list').innerHTML = randomCountries.map(country => `
-      <div class="country-card" style="align-items:center;text-align:center;">
-        <div class="country-name" style="font-size:1.13rem;font-weight:700;margin-bottom:12px;">${country}</div>
-        <a href="/country/${encodeURIComponent(country)}"><button class="buy-btn">Buy Now</button></a>
-      </div>
-    `).join('');
-  });
-</script>
-
+    .hero {
+      padding: 42px 0 22px 0;
+      background: linear-gradient(270deg, #627fff, #7d52ff, #f50057, #ff8b6a, #627fff);
+      background-size: 200% 200%;
+      animation: gradientMove 8s ease-in-out infinite;
+      color: #fff;
+      text-align: center;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      box-shadow: 0 8px 32px rgba(50,60,100,0.09);
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .logo {
+      font-size: 2.3rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      user-select: none;
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin: 0 0 8px 0;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    }
+    .main-section {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 32px 16px 0 16px;
+    }
+    .search-area {
+      max-width: 420px;
+      margin: 0 auto 26px auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border-radius: 99px;
+      box-shadow: 0 2px 18px rgba(60,70,100,0.08);
+      padding: 5px 10px 5px 22px;
+      position: relative;
+      top: -18px;
+    }
+    .search-input {
+      border: none;
+      background: none;
+      font-size: 1.09rem;
+      flex: 1;
+      outline: none;
+      padding: 12px 0;
+    }
+    .search-btn {
+      background: #f50057;
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 99px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    .search-btn:hover { background: #627fff; }
+    .country-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px 18px;
+      margin: 0 auto 28px auto;
+    }
+    .country-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 18px rgba(120,150,200,0.09);
+      padding: 36px 24px 22px 24px;
+      min-width: 170px;
+      max-width: 240px;
+      width: 90vw;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.15s, box-shadow 0.13s;
+    }
+    .country-card:hover {
+      transform: translateY(-7px) scale(1.025);
+      box-shadow: 0 14px 34px rgba(90,60,140,0.13);
+    }
+    .country-name {
+      font-size: 1.17rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    .buy-btn {
+      background: #f50057;
+      color: #fff;
+      border: none;
+      border-radius: 99px;
+      padding: 12px 32px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.18s;
+      box-shadow: 0 2px 12px rgba(90,60,140,0.10);
+    }
+    .buy-btn:hover { background: #627fff; }
+    .features-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px 18px;
+      margin: 0 auto 20px auto;
+      max-width: 1100px;
+    }
+    .feature-box {
+      background: #fff;
+      box-shadow: 0 4px 18px rgba(120,150,200,0.08);
+      border-radius: 18px;
+      padding: 22px 24px 18px 24px;
+      width: 260px;
+      min-width: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      font-size: 1.02rem;
+      margin-bottom: 10px;
+    }
+    .feature-title {
+      font-size: 1.09rem;
+      font-weight: 700;
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .faq {
+      max-width: 850px;
+      margin: 38px auto 0 auto;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(50,60,100,0.07);
+      padding: 36px 32px 28px 32px;
+    }
+    .faq h2 {
+      margin-top: 0;
+      font-size: 1.27rem;
+      font-weight: 900;
+      color: #1a1a2e;
+    }
+    .faq dt {
+      font-weight: 700;
+      margin-top: 18px;
+      font-size: 1.07rem;
+    }
+    .faq dd {
+      margin: 4px 0 10px 0;
+      color: #333;
+      font-size: 1.03rem;
+    }
+    .footer {
+      text-align: center;
+      font-size: 1rem;
+      color: #888;
+      margin: 40px 0 16px 0;
+      opacity: .85;
+    }
+    .footer a { color: #627fff; text-decoration: underline; }
+    @media (max-width: 900px) {
+      .features-row, .country-grid, .faq { max-width: 99vw; }
+      .feature-box, .country-card { width: 98vw; min-width: 0; }
+    }
+    @media (max-width: 700px) {
+      .main-section { padding: 24px 2vw 0 2vw; }
+      .country-card, .feature-box { min-width: 80vw; max-width: 99vw; padding: 28px 3vw 16px 3vw; }
+      .country-grid, .features-row { gap: 14px 0; }
+      .faq { padding: 18px 2vw 16px 2vw; }
+      .search-area { max-width: 99vw; }
+    }
+  </style>
 </head>
 <body>
-    <div class="hero">
-        <div class="logo">Roampass</div>
-        <div class="hero-title">Global eSIM — Instantly Connected, Anywhere</div>
-        <div class="hero-desc">
-            Instant eSIM for every country. Study, travel, work — all in one tap.<br>
-            5-minute activation. Secure payments. No roaming anxiety.
-        </div>
-        <a href="#countries"><button class="cta-btn">Shop eSIM Plans</button></a>
+<div class="hero">
+  <div class="logo">Roampass</div>
+  <div class="hero-title">Global eSIM Countries</div>
+  <div style="font-size:1.18rem; font-weight:500; margin-top:18px; max-width:600px; margin-left:auto; margin-right:auto;">
+    Instant eSIM for every country. Study, travel, work — all in one tap.<br>
+    5-minute activation. Secure payments. No roaming anxiety.
+  </div>
+</div>
+
+  <div class="main-section">
+
+    <div class="search-area">
+      <input type="text" id="countrySearch" class="search-input" placeholder="Search your country (e.g. France, Japan...)" onkeyup="filterCountries()">
+      <button class="search-btn" onclick="filterCountries()">Search</button>
     </div>
-    <div class="main-section">
-        <div class="search-area">
-            <input type="text" id="countrySearch" class="search-input" placeholder="Search your destination (e.g. France, Spain...)" onkeyup="searchCountry()">
-            <button class="search-btn" onclick="searchCountry()">Search</button>
-        </div>
-        <div id="countries" class="country-grid">
-            <div class="country-card">
-                <div class="country-header">
-                    <img src="https://flagcdn.com/gb.svg" class="flag" alt="UK">
-                    <span class="country-name">United Kingdom</span>
-                </div>
-                <div class="package">5GB / 7 days / 5G Ready</div>
-                <div class="price">€8.99</div>
-                <a href="/esim-uk"><button class="buy-btn">Buy Now</button></a>
-            </div>
-            <div class="country-card">
-                <div class="country-header">
-                    <img src="https://flagcdn.com/fr.svg" class="flag" alt="France">
-                    <span class="country-name">France</span>
-                </div>
-                <div class="package">3GB / 7 days / 5G Ready</div>
-                <div class="price">€7.99</div>
-                <a href="/esim-fr"><button class="buy-btn">Buy Now</button></a>
-            </div>
-            <div class="country-card">
-                <div class="country-header">
-                    <img src="https://flagcdn.com/es.svg" class="flag" alt="Spain">
-                    <span class="country-name">Spain</span>
-                </div>
-                <div class="package">10GB / 14 days / 5G Ready</div>
-                <div class="price">€12.99</div>
-                <a href="/esim-es"><button class="buy-btn">Buy Now</button></a>
-            </div>
-            <div class="country-card">
-                <div class="country-header">
-                    <img src="https://flagcdn.com/us.svg" class="flag" alt="USA">
-                    <span class="country-name">United States</span>
-                </div>
-                <div class="package">7GB / 15 days / 5G Ready</div>
-                <div class="price">€14.99</div>
-                <a href="/esim-us"><button class="buy-btn">Buy Now</button></a>
-            </div>
-        </div>
-        <div class="features-row">
-            <div class="feature-box">
-                <div class="feature-title">🚀 Activate in Minutes</div>
-                <div class="feature-desc">No more SIM cards, no more lines. Buy, scan, and connect in under 5 minutes — straight from your phone.</div>
-            </div>
-            <div class="feature-box">
-                <div class="feature-title">🌍 195+ Countries Covered</div>
-                <div class="feature-desc">From the UK to Japan, Roampass covers all major destinations. Perfect for travelers, expats, students, and digital nomads.</div>
-            </div>
-            <div class="feature-box">
-                <div class="feature-title">💳 All Major Payments Accepted</div>
-                <div class="feature-desc">Pay with Alipay, WeChat, Apple Pay, Google Pay, or any credit card. 100% secure checkout. Get your eSIM by email instantly.</div>
-            </div>
-            <div class="feature-box">
-                <div class="feature-title">🔒 Privacy First</div>
-                <div class="feature-desc">No personal registration required. Buy and use eSIM with maximum privacy. Your data stays your own.</div>
-            </div>
-            <div class="feature-box">
-                <div class="feature-title">⚡ Real-time Delivery</div>
-                <div class="feature-desc">After payment, your eSIM QR code is emailed instantly. No waiting. No stress. You’re online in minutes.</div>
-            </div>
-        </div>
-        <div class="faq">
-            <h2>Frequently Asked Questions</h2>
-            <dl>
-                <dt>Which phones support eSIM?</dt>
-                <dd>iPhone XR and newer, iPads, and most modern Android flagships (Samsung S20+, Google Pixel 4+, etc.). Please check your device’s eSIM compatibility before purchasing.</dd>
-                <dt>What payment methods are supported?</dt>
-                <dd>Alipay, WeChat Pay, Apple Pay, Google Pay, Visa, Mastercard, and more.</dd>
-                <dt>How fast will I receive my eSIM?</dt>
-                <dd>Within 1 minute — the eSIM QR code and activation instructions will arrive by email, instantly after payment.</dd>
-                <dt>Can I get a refund?</dt>
-                <dd>If you haven’t activated the eSIM yet, full refunds are supported. Once activated, no refunds are possible.</dd>
-                <dt>Can I use this for long-term plans?</dt>
-                <dd>Perfect for travel, short-term stays, or as a backup number. Long-term plans available in selected countries — contact us for details.</dd>
-            </dl>
-        </div>
+
+    <div id="country-list" class="country-grid"></div>
+
+    <div class="features-row">
+      <div class="feature-box">
+        <div class="feature-title">🚀 Activate in Minutes</div>
+        <div>No more SIM cards, no more lines. Buy, scan, and connect in under 5 minutes — straight from your phone.</div>
+      </div>
+      <div class="feature-box">
+        <div class="feature-title">🌏 195+ Countries Covered</div>
+        <div>From the UK to Japan, Roampass covers all major destinations. Perfect for travelers, expats, students, and digital nomads.</div>
+      </div>
+      <div class="feature-box">
+        <div class="feature-title">💳 All Major Payments Accepted</div>
+        <div>Pay with Alipay, WeChat Pay, Apple Pay, Google Pay, or any credit card. 100% secure checkout. Get your eSIM by email instantly.</div>
+      </div>
+      <div class="feature-box">
+        <div class="feature-title">🔒 Privacy First</div>
+        <div>No personal registration required. Buy and use eSIM with maximum privacy. Your data stays your own.</div>
+      </div>
+      <div class="feature-box">
+        <div class="feature-title">⚡ Real-time Delivery</div>
+        <div>After payment, your eSIM QR code is emailed instantly. No waiting. No stress. You’re online in minutes.</div>
+      </div>
     </div>
-    <div class="footer">
-        &copy; 2025 Roampass. Built by AI. Your next-gen eSIM companion 🪐 | <a href="mailto:support@roampass.com">Contact Us</a>
+
+    <div class="faq">
+      <h2>Frequently Asked Questions</h2>
+      <dl>
+        <dt>Which phones support eSIM?</dt>
+        <dd>iPhone XR and newer, iPads, and most modern Android flagships (Samsung S20+, Google Pixel 4+, etc.). Please check your device’s eSIM compatibility before purchasing.</dd>
+        <dt>What payment methods are supported?</dt>
+        <dd>Alipay, WeChat Pay, Apple Pay, Google Pay, Visa, Mastercard, and more.</dd>
+        <dt>How fast will I receive my eSIM?</dt>
+        <dd>Within 1 minute — the eSIM QR code and activation instructions will arrive by email, instantly after payment.</dd>
+        <dt>Can I get a refund?</dt>
+        <dd>If you haven’t activated the eSIM yet, full refunds are supported. Once activated, no refunds are possible.</dd>
+        <dt>Can I use this for long-term plans?</dt>
+        <dd>Perfect for travel, short-term stays, or as a backup number. Long-term plans available in selected countries — contact us for details.</dd>
+      </dl>
     </div>
+
+  </div>
+  <div class="footer">
+    &copy; 2025 Roampass. Built by AI. Your next-gen eSIM companion 🪐 |
+    <a href="mailto:support@roampass.com">Contact Us</a>
+  </div>
+  <script>
+    let allCountries = [];
+    // 洗牌
+    function shuffle(arr) {
+      let a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    // 渲染
+    function renderCountries(arr) {
+      document.getElementById('country-list').innerHTML = arr.map(country => `
+        <div class="country-card">
+          <div class="country-name">${country}</div>
+          <a href="/country/${encodeURIComponent(country)}"><button class="buy-btn">Buy Now</button></a>
+        </div>
+      `).join('');
+    }
+    // 搜索过滤
+    function filterCountries() {
+      let val = document.getElementById('countrySearch').value.trim().toLowerCase();
+      if (!val) {
+        renderCountries(shuffle(allCountries)); // 输入为空重新随机
+      } else {
+        renderCountries(
+          allCountries.filter(c => c.toLowerCase().includes(val))
+        );
+      }
+    }
+    // 首次加载
+    fetch('/plans/esim_country_grouped.json')
+      .then(res => res.json())
+      .then(data => {
+        allCountries = Object.keys(data)
+          .map(c => c.replace(/^[\s\xa0]+/g, '').trim())
+          .filter(Boolean);
+        renderCountries(shuffle(allCountries));
+      });
+  </script>
 </body>
 </html>
