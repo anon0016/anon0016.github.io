@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Roampass - Your Travel Companion</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roampass</title>
   <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     * {
@@ -12,11 +12,13 @@
       box-sizing: border-box;
       font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
     }
-html, body {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
+    html, body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #f5f5f7;
+      color: #1d1d1f;
+    }
     header {
       padding: 1.5rem 2rem;
       background: #ffffffcc;
@@ -40,51 +42,52 @@ html, body {
     nav a:hover {
       opacity: 0.7;
     }
-    .hero {
-      text-align: center;
-      padding: 5rem 2rem 3rem;
-    }
-    .hero h2 {
-      font-size: 3rem;
-      font-weight: 800;
-      margin-bottom: 1rem;
-    }
-    .hero p {
-      font-size: 1.25rem;
-      color: #6e6e73;
-      max-width: 600px;
-      margin: 0 auto;
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
     }
     .modules {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-      padding: 3rem 2rem;
-        flex: 1;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
     }
     .card {
       background: #fff;
       padding: 2rem;
-      border-radius: 1.5rem;
+      border-radius: 1.25rem;
       box-shadow: 0 4px 16px rgba(0,0,0,0.06);
       transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
     .card:hover {
       transform: translateY(-3px);
       box-shadow: 0 6px 24px rgba(0,0,0,0.1);
     }
     .card h3 {
-      font-size: 1.375rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
     }
     .card p {
       font-size: 1rem;
       color: #6e6e73;
     }
-footer {
-  margin-top: auto;
-}
+    footer {
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: #86868b;
+    }
   </style>
 </head>
 <body>
@@ -92,31 +95,27 @@ footer {
     <h1>Roampass</h1>
     <nav>
       <a href="#features">Features</a>
-      <a href="#plans">Plans</a>
       <a href="#contact">Contact</a>
     </nav>
   </header>
-  <section class="hero">
-    <h2>Travel. Instantly. Elegantly.</h2>
-    <p>Roampass brings you eSIMs, passes, and tickets in one tap</p>
-  </section>
-  <section class="modules" id="features">
-    <div class="card">
-      <h3>eSIM Marketplace</h3>
-      <p>Instant mobile data in 150+ countries. No apps. No plastic. Just tap and go.</p>
-    </div>
-    <div class="card">
-      <h3>Event Tickets</h3>
-      <p>Access concerts, attractions, experiences, and museums — digitally delivered and seamlessly stored.</p>
-    </div>
-    <div class="card">
-      <h3>City Travel Passes</h3>
-      <p>Bundle public transport and landmark entries in one tap. Roam smart and skip the lines.</p>
-    </div>
-  </section>
+  <main>
+    <section class="modules" id="features">
+      <div class="card">
+        <h3>eSIM Marketplace</h3>
+        <p>Instant mobile data in 150+ countries. No apps. No plastic. Just tap and go.</p>
+      </div>
+      <div class="card">
+        <h3>Event Tickets</h3>
+        <p>Access concerts, attractions, experiences, and museums — digitally delivered and seamlessly stored.</p>
+      </div>
+      <div class="card">
+        <h3>City Travel Passes</h3>
+        <p>Bundle public transport and landmark entries in one tap. Roam smart and skip the lines.</p>
+      </div>
+    </section>
+  </main>
   <footer>
-    &copy; 2025 Roampass. Designed for modern travelers.<br>
-    Contact us: <a href="mailto:support@roampass.uk">support@roampass.uk</a>
+    &copy; 2025 Roampass — <a href="mailto:support@roampass.uk">support@roampass.uk</a>
   </footer>
 </body>
 </html>
