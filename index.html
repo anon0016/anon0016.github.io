@@ -102,6 +102,18 @@
       font-size: 0.95rem;
       color: #555;
     }
+    #results {
+      padding: 2rem;
+      text-align: center;
+    }
+    .plan {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      margin: 1rem auto;
+      padding: 1rem;
+      max-width: 400px;
+    }
     footer {
       text-align: center;
       padding: 1.5rem;
@@ -120,10 +132,11 @@
     <h2>Stay connected <span class="highlight">wherever</span> you go</h2>
     <p>With Roampass eSIM, enjoy internet connection on every adventure and forget about expensive roaming bills.</p>
     <div class="search-box">
-      <input type="text" placeholder="Where are you traveling?">
-      <button>🔍</button>
+      <input type="text" id="search" placeholder="Where are you traveling?">
+      <button onclick="filterPlans()">🔍</button>
     </div>
   </section>
+  <section id="results"></section>
   <section class="how-it-works">
     <h2>How does Roampass work?</h2>
     <div class="steps">
@@ -145,5 +158,36 @@
     &copy; 2025 Roampass — All rights reserved<br>
     <a href="mailto:support@roampass.uk">support@roampass.uk</a>
   </footer>
+
+  <script>
+    let plans = {};
+
+    async function loadPlans() {
+      const res = await fetch('/plans/esim_country_grouped.json');
+      plans = await res.json();
+    }
+
+    function filterPlans() {
+      const keyword = document.getElementById('search').value.toLowerCase();
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+      for (const country in plans) {
+        if (country.toLowerCase().includes(keyword)) {
+          plans[country].forEach(plan => {
+            const div = document.createElement('div');
+            div.className = 'plan';
+            div.innerHTML = `<h3>${country}</h3><p>${plan.gb} GB • ${plan.days} days</p><p>€${plan.price}</p>`;
+            container.appendChild(div);
+          });
+        }
+      }
+    }
+
+    document.getElementById('search').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') filterPlans();
+    });
+
+    loadPlans();
+  </script>
 </body>
 </html>
