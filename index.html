@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Roampass - Global eSIM, Tickets & Travel</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -159,35 +159,45 @@
     <a href="mailto:support@roampass.uk">support@roampass.uk</a>
   </footer>
 
+  <script src="https://js.stripe.com/v3/"></script>
   <script>
-    let plans = {};
+    let products = [];
 
-    async function loadPlans() {
-      const res = await fetch('/plans/esim_country_grouped.json');
-      plans = await res.json();
+    async function loadProducts() {
+      const response = await fetch('https://api.stripe.com/v1/prices?expand[]=data.product', {
+        headers: {
+          Authorization: 'Bearer pk_live_51ROQeVLxtU0Hsdt0Zw7zuIpizanNU8ggEV6Cr0CCUrznEpVJNdpFz1kKfBYJmpVJGgBiLyL9qB2lQqL0gvaaMkYy005cHaOFCc'
+        }
+      });
+      const data = await response.json();
+      products = data.data;
+      displayProducts(products);
+    }
+
+    function displayProducts(products) {
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+      products.forEach(p => {
+        const country = p.product.name;
+        const price = (p.unit_amount / 100).toFixed(2);
+        const div = document.createElement('div');
+        div.className = 'plan';
+        div.innerHTML = `<h3>${country}</h3><p>${p.product.description || ''}</p><p>€${price}</p>`;
+        container.appendChild(div);
+      });
     }
 
     function filterPlans() {
       const keyword = document.getElementById('search').value.toLowerCase();
-      const container = document.getElementById('results');
-      container.innerHTML = '';
-      for (const country in plans) {
-        if (country.toLowerCase().includes(keyword)) {
-          plans[country].forEach(plan => {
-            const div = document.createElement('div');
-            div.className = 'plan';
-            div.innerHTML = `<h3>${country}</h3><p>${plan.gb} GB • ${plan.days} days</p><p>€${plan.price}</p>`;
-            container.appendChild(div);
-          });
-        }
-      }
+      const filtered = products.filter(p => p.product.name.toLowerCase().includes(keyword));
+      displayProducts(filtered);
     }
 
     document.getElementById('search').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') filterPlans();
     });
 
-    loadPlans();
+    loadProducts();
   </script>
 </body>
 </html>
