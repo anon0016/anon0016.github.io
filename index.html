@@ -3,60 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Roampass - Global eSIM Plans</title>
+  <title>Roampass - eSIM for Every Country</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
+    body {
+      font-family: 'Inter', sans-serif;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-    body {
-      background: #ffffff;
-      color: #1f1f1f;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      background: #fff;
+      color: #1a1a1a;
     }
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 1.5rem;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: #fff0f5;
       border-bottom: 1px solid #eee;
     }
-    header h1 {
-      color: #ff3b30;
-      font-weight: 700;
-      font-size: 1.5rem;
-    }
-    .hero {
-      text-align: center;
-      padding: 4rem 2rem 2rem;
-      background: linear-gradient(to bottom, #f5f7ff, #fff0f5);
-    }
-    .hero h2 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-    .hero h2 .highlight {
-      color: #ff3b30;
-    }
-    .hero p {
-      font-size: 1rem;
-      color: #555;
-      max-width: 520px;
-      margin: 0 auto 2rem;
-    }
     .search-box {
+      max-width: 480px;
+      margin: 2rem auto;
       display: flex;
-      max-width: 420px;
-      margin: 0 auto;
-      background: white;
+      border: 1px solid #ccc;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       overflow: hidden;
     }
     .search-box input {
@@ -67,94 +37,100 @@
     }
     .search-box button {
       background: #32d74b;
+      color: white;
       border: none;
       padding: 0 1.25rem;
-      color: white;
       font-size: 1.2rem;
       cursor: pointer;
     }
     #results {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       padding: 2rem;
-      text-align: center;
+      gap: 1rem;
     }
     .plan {
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-      margin: 1rem auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       padding: 1rem;
-      max-width: 400px;
+      width: 280px;
+      text-align: center;
+    }
+    .plan h3 {
+      margin-bottom: 0.25rem;
+      font-size: 1.125rem;
+    }
+    .plan p {
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
     }
     .plan button {
-      background-color: #0070f3;
+      background: #0070f3;
       color: white;
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.5rem 1.25rem;
       border-radius: 8px;
-      margin-top: 1rem;
+      font-weight: 600;
       cursor: pointer;
-    }
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.875rem;
-      color: #888;
-      margin-top: auto;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Roampass</h1>
-    <div>🛒 ☰</div>
-  </header>
-  <section class="hero">
-    <h2>Stay connected <span class="highlight">wherever</span> you go</h2>
-    <p>Explore and buy eSIMs for any country. Fast delivery. Stripe-secured checkout.</p>
-    <div class="search-box">
-      <input type="text" id="search" placeholder="Search for a country...">
-      <button onclick="filterPlans()">🔍</button>
-    </div>
-  </section>
-  <section id="results"></section>
-  <footer>
-    &copy; 2025 Roampass — All rights reserved<br>
-    <a href="mailto:support@roampass.uk">support@roampass.uk</a>
-  </footer>
+
+  <header>Roampass — Explore eSIM Plans</header>
+
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Search by country name...">
+    <button onclick="filterPlans()">🔍</button>
+  </div>
+
+  <section id="results">Loading plans...</section>
+
   <script>
     let products = [];
 
     async function loadProducts() {
-      const res = await fetch('https://prices.ps8w72dmnh.workers.dev');
-      products = await res.json();
-      displayProducts(products);
+      try {
+        const res = await fetch('/'); // 调用 Cloudflare Worker 返回的 JSON
+        const data = await res.json();
+        products = data;
+        displayProducts(products);
+      } catch (err) {
+        document.getElementById('results').innerHTML = 'Failed to load plans.';
+        console.error(err);
+      }
     }
 
-    function displayProducts(items) {
+    function displayProducts(list) {
       const container = document.getElementById('results');
       container.innerHTML = '';
-      items.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'plan';
-        div.innerHTML = `
-          <h3>${p.name}</h3>
-          <p>${p.description || ''}</p>
-          <p>€${(p.price / 100).toFixed(2)}</p>
-          <form action="https://checkout.stripe.com/pay/${p.priceId}" method="GET">
-            <button>Buy</button>
-          </form>
+      list.forEach(p => {
+        const name = p.product?.name || 'Unnamed';
+        const description = p.product?.description || '';
+        const amount = p.amount ? (p.amount / 100).toFixed(2) : '0.00';
+        const currency = p.currency?.toUpperCase() || 'EUR';
+
+        const card = document.createElement('div');
+        card.className = 'plan';
+        card.innerHTML = `
+          <h3>${name}</h3>
+          <p>${description}</p>
+          <p>€${amount} ${currency}</p>
+          <button onclick="window.location.href='https://buy.stripe.com/test_xxx'">Buy</button>
         `;
-        container.appendChild(div);
+        container.appendChild(card);
       });
     }
 
     function filterPlans() {
       const keyword = document.getElementById('search').value.toLowerCase();
-      const filtered = products.filter(p => p.name.toLowerCase().includes(keyword));
+      const filtered = products.filter(p => p.product?.name?.toLowerCase().includes(keyword));
       displayProducts(filtered);
     }
 
-    document.getElementById('search').addEventListener('keypress', function(e) {
+    document.getElementById('search').addEventListener('keypress', e => {
       if (e.key === 'Enter') filterPlans();
     });
 
@@ -162,4 +138,3 @@
   </script>
 </body>
 </html>
-
