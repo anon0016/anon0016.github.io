@@ -166,7 +166,7 @@
     async function loadProducts() {
       const response = await fetch('https://api.stripe.com/v1/prices?expand[]=data.product', {
         headers: {
-          Authorization: 'Bearer pk_live_51ROQeVLxtU0Hsdt0Zw7zuIpizanNU8ggEV6Cr0CCUrznEpVJNdpFz1kKfBYJmpVJGgBiLyL9qB2lQqL0gvaaMkYy005cHaOFCc'
+          Authorization: 'Bearer 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'
         }
       });
       const data = await response.json();
