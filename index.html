@@ -2,95 +2,100 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Roampass 全部套餐</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roampass - Global eSIM Plans</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 20px;
-      background: #f7f7f7;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background-color: #f9fafb; color: #111827; line-height: 1.6; }
+    header {
+      background: linear-gradient(90deg, #2563eb, #1e40af);
+      color: white; padding: 3rem 2rem; text-align: center;
     }
-    h1 {
-      text-align: center;
+    header h1 { font-size: 2.5rem; font-weight: 800; }
+    header p { margin-top: 1rem; font-size: 1.2rem; }
+
+    .section {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1rem;
     }
-    .grid {
+    .features {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
     }
     .card {
       background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      padding: 16px;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      transition: 0.3s ease;
+    }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
+    .card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+    .cta {
       text-align: center;
+      margin-top: 4rem;
     }
-    .card h3 {
-      margin: 0 0 6px;
-      font-size: 18px;
-      color: #222;
-    }
-    .card p {
-      margin: 0;
-      font-size: 14px;
-      color: #444;
-    }
-    .price {
-      font-size: 16px;
-      font-weight: bold;
-      margin: 8px 0;
-    }
-    .btn {
-      background: #0070f3;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 6px;
-      text-decoration: none;
+    .cta a {
       display: inline-block;
-      font-weight: bold;
+      background: #2563eb;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
     }
-    .btn:hover {
-      background: #0059c1;
+    .cta a:hover { background: #1e3a8a; }
+
+    footer {
+      background: #111827;
+      color: #9ca3af;
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <h1>📱 所有国家套餐</h1>
-  <div class="grid" id="plan-grid">Loading...</div>
+  <header>
+    <h1>Roampass</h1>
+    <p>Global eSIMs. Instant activation. No physical cards needed.</p>
+  </header>
 
-  <script>
-    const api = "https://prices.ps8w72dmnh.workers.dev/"; // ⬅️ 替换为真实 API
+  <section class="section">
+    <h2>Why Choose Roampass?</h2>
+    <div class="features">
+      <div class="card">
+        <h3>Worldwide Coverage</h3>
+        <p>Stay connected in over 200 countries and regions. No physical SIM swap required.</p>
+      </div>
+      <div class="card">
+        <h3>Instant Delivery</h3>
+        <p>Get your eSIM QR code within seconds after purchase. Fast and reliable.</p>
+      </div>
+      <div class="card">
+        <h3>Fully Digital</h3>
+        <p>No shipping delays. Everything is delivered online. Eco-friendly and efficient.</p>
+      </div>
+      <div class="card">
+        <h3>Flexible Plans</h3>
+        <p>Daily, weekly, monthly, or bulk data options. Pay only for what you need.</p>
+      </div>
+    </div>
 
-    fetch(api)
-      .then(res => res.json())
-      .then(data => {
-        const grid = document.getElementById("plan-grid");
-        grid.innerHTML = "";
+    <div class="cta">
+      <a href="https://shop.roampass.uk">Buy eSIM Now</a>
+    </div>
+  </section>
 
-        data.forEach(country => {
-          const countryName = country.name || "Unnamed Country";
-
-          (country.plans || []).forEach(plan => {
-            const planName = plan.plan || "Unnamed Plan";
-            const priceStr = `${plan.price || "0.00"} ${plan.currency || "USD"}`;
-
-            const card = document.createElement("div");
-            card.className = "card";
-            card.innerHTML = `
-              <h3>${countryName}</h3>
-              <p>${planName}</p>
-              <div class="price">${priceStr}</div>
-              <a class="btn" href="https://buy.stripe.com/test_${plan.priceId || "#"}">Buy</a>
-            `;
-            grid.appendChild(card);
-          });
-        });
-      })
-      .catch(err => {
-        document.getElementById("plan-grid").innerText = "❌ 加载失败，请稍后重试。";
-        console.error(err);
-      });
-  </script>
+  <footer>
+    &copy; 2025 Roampass Ltd. All rights reserved. <br>
+    Registered in the United Kingdom · Digital Connectivity Services Provider
+  </footer>
 </body>
 </html>
