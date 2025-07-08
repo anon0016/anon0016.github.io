@@ -45,21 +45,19 @@
       background: rgba(255, 255, 255, 0.8);
       backdrop-filter: saturate(180%) blur(20px);
       -webkit-backdrop-filter: saturate(180%) blur(20px);
-      color: #000;
       padding: 20px 40px;
-      text-align: center;
       border-bottom: 1px solid rgba(0, 0, 0, 0.06);
       position: sticky;
       top: 0;
       z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    header h1 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 600;
-    }
-    nav {
-      margin-top: 6px;
+    .logo {
+      font-size: 26px;
+      font-weight: 700;
+      color: #000;
     }
     nav a {
       color: #333;
@@ -149,7 +147,7 @@
 <body>
 
 <header>
-  <h1>Roampass</h1>
+  <div class="logo">Roampass</div>
   <nav>
     <a href="/products">Browse Plans</a>
     <a href="/contact">Contact Us</a>
@@ -161,7 +159,7 @@
   <h2>Your Global eSIM Travel Partner</h2>
   <p>Buy eSIMs for 100+ countries. Instant delivery. No roaming. No SIM card swap. Just scan & go.</p>
   <div class="cta">
-    <a href="/products">View Data Plans</a>
+    <a href="https://shop.roampass.uk">View Data Plans</a>
   </div>
 </section>
 
