@@ -1,101 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roampass - Global eSIM Plans</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Roampass | eSIM for Global Travelers – Instant Activation, No SIM Card Needed</title>
+  <meta name="description" content="Roampass offers instant eSIM for over 100 countries. No physical SIM, no hassle. Ideal for tourists, students, and remote workers. Easy, fast, and affordable.">
+  <meta name="keywords" content="Roampass, eSIM, travel SIM, digital SIM card, global eSIM, data plans">
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://shop.roampass.uk/" />
+
+  <!-- Social preview -->
+  <meta property="og:title" content="Roampass | Global eSIM for Travelers" />
+  <meta property="og:description" content="Buy eSIM plans for 100+ destinations. Instant delivery, no physical SIM card, no roaming shock." />
+  <meta property="og:image" content="https://shop.roampass.uk/assets/cover.jpg" />
+  <meta property="og:url" content="https://shop.roampass.uk/" />
+  <meta property="og:type" content="website" />
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Roampass",
+    "url": "https://shop.roampass.uk",
+    "logo": "https://shop.roampass.uk/assets/logo.png",
+    "sameAs": [
+      "https://www.instagram.com/roampass",
+      "https://www.tiktok.com/@roampass"
+    ],
+    "description": "Roampass sells eSIM for travelers to over 100 destinations worldwide. Instant activation. No physical SIM. Affordable data plans."
+  }
+  </script>
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background-color: #f9fafb; color: #111827; line-height: 1.6; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #1c1c1e;
+      background: #f9f9f9;
+    }
     header {
-      background: linear-gradient(90deg, #2563eb, #1e40af);
-      color: white; padding: 3rem 2rem; text-align: center;
-    }
-    header h1 { font-size: 2.5rem; font-weight: 800; }
-    header p { margin-top: 1rem; font-size: 1.2rem; }
-
-    .section {
-      max-width: 900px;
-      margin: 3rem auto;
-      padding: 0 1rem;
-    }
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-    .card {
-      background: white;
-      border-radius: 1rem;
-      padding: 2rem;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-      transition: 0.3s ease;
-    }
-    .card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
-    .card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
-
-    .cta {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      color: #000;
+      padding: 20px 40px;
       text-align: center;
-      margin-top: 4rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    nav {
+      margin-top: 6px;
+    }
+    nav a {
+      color: #333;
+      margin: 0 14px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: color 0.2s ease;
+    }
+    nav a:hover {
+      color: #007aff;
+    }
+    .hero {
+      text-align: center;
+      padding: 80px 20px 60px;
+      background: #fff;
+    }
+    .hero h2 {
+      font-size: 34px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: #111;
+    }
+    .hero p {
+      font-size: 17px;
+      color: #555;
+      line-height: 1.6;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .cta {
+      margin-top: 30px;
     }
     .cta a {
       display: inline-block;
-      background: #2563eb;
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 9999px;
-      text-decoration: none;
+      background: #000;
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 999px;
       font-weight: 600;
+      font-size: 16px;
+      text-decoration: none;
       transition: background 0.3s ease;
     }
-    .cta a:hover { background: #1e3a8a; }
-
-    footer {
-      background: #111827;
-      color: #9ca3af;
+    .cta a:hover {
+      background: #333;
+    }
+    .features {
+      max-width: 960px;
+      margin: auto;
+      padding: 60px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: space-around;
+      background: #f5f5f7;
+    }
+    .feature {
+      flex: 1 1 280px;
+      background: #fff;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
       text-align: center;
-      padding: 2rem 1rem;
-      font-size: 0.9rem;
+      transition: transform 0.2s ease;
+    }
+    .feature:hover {
+      transform: translateY(-2px);
+    }
+    .feature h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .feature p {
+      font-size: 15px;
+      color: #555;
+    }
+    footer {
+      text-align: center;
+      font-size: 13px;
+      color: #777;
+      padding: 30px 20px;
+      background: #f2f2f2;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Roampass</h1>
-    <p>Global eSIMs. Instant activation. No physical cards needed.</p>
-  </header>
 
-  <section class="section">
-    <h2>Why Choose Roampass?</h2>
-    <div class="features">
-      <div class="card">
-        <h3>Worldwide Coverage</h3>
-        <p>Stay connected in over 200 countries and regions. No physical SIM swap required.</p>
-      </div>
-      <div class="card">
-        <h3>Instant Delivery</h3>
-        <p>Get your eSIM QR code within seconds after purchase. Fast and reliable.</p>
-      </div>
-      <div class="card">
-        <h3>Fully Digital</h3>
-        <p>No shipping delays. Everything is delivered online. Eco-friendly and efficient.</p>
-      </div>
-      <div class="card">
-        <h3>Flexible Plans</h3>
-        <p>Daily, weekly, monthly, or bulk data options. Pay only for what you need.</p>
-      </div>
-    </div>
+<header>
+  <h1>Roampass</h1>
+  <nav>
+    <a href="/products">Browse Plans</a>
+    <a href="/contact">Contact Us</a>
+    <a href="/faq">FAQ</a>
+  </nav>
+</header>
 
-    <div class="cta">
-      <a href="https://shop.roampass.uk">Buy eSIM Now</a>
-    </div>
-  </section>
+<section class="hero">
+  <h2>Your Global eSIM Travel Partner</h2>
+  <p>Buy eSIMs for 100+ countries. Instant delivery. No roaming. No SIM card swap. Just scan & go.</p>
+  <div class="cta">
+    <a href="/products">View Data Plans</a>
+  </div>
+</section>
 
-  <footer>
-    &copy; 2025 Roampass Ltd. All rights reserved. <br>
-    Registered in the United Kingdom · Digital Connectivity Services Provider
-  </footer>
+<section class="features">
+  <div class="feature">
+    <h3>🌍 100+ Destinations</h3>
+    <p>Support for Japan, US, UK, Korea, EU and more. Perfect for tourists, students and digital nomads.</p>
+  </div>
+  <div class="feature">
+    <h3>⚡ Instant Delivery</h3>
+    <p>Get your QR code eSIM within seconds. Works with most iPhones, Pixels and eSIM-enabled Androids.</p>
+  </div>
+  <div class="feature">
+    <h3>💸 Affordable Pricing</h3>
+    <p>No hidden fees. No contracts. Plans starting from just $3.99. Pay once and travel worry-free.</p>
+  </div>
+</section>
+
+<footer>
+  &copy; 2025 Roampass LTD · Company Number: 16450376 · Registered in UK
+</footer>
+
 </body>
 </html>
